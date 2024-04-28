@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akasata SOC Playbooks</title>
+</head>
+<body>
+
+  <h2>SOC Analyst Playbook Form</h2>
+  
+  <form action="/submit" method="post" enctype="multipart/form-data">
+    Jenis Serangan:<br>
+    <input type="text" name="attack_type"><br>
+    Tags:<br>
+    <input type="text" name="tags"><br>
+    Severity:<br>
+    <input type="text" name="severity"><br>
+    Description:<br>
+    <input type="text" name="description"><br>
+    Action:<br>
+    <input type="text" name="action"><br>
+    Upload Evidence:<br>
+    <input type="file" name="evidence"><br>
+    Recommendations:<br>
+    <input type="text" name="recommendations"><br>
+    Details:<br>
+    <textarea name="details"></textarea><br>
+    <input type="submit" value="Submit">
+  </form> 
+  
+  </body>
+</html>
+
+<!DOCTYPE html>
+<html>
+
+</html>

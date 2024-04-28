@@ -1,0 +1,23 @@
+###
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "name": "admin",
+    "email": "admin@gmail.com",
+    "password": "admin312321321",
+}
+
+###
+GET http://localhost:5000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZW5nZ3VuYUlkIjoxNiwidXNlciI6ImFkbWluIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE2OTM0NjY3MDAsImV4cCI6MTY5MzQ2NjcyMH0.8d5UHyzmJru2RxXZ4smYhApdD85D2sUv8cq5E2Z83zI
+
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+accept: application/json
+
+{
+   "email": "admin",
+   "password": "admin"
+}
