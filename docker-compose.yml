@@ -1,0 +1,13 @@
+services:
+  playbook-backend:
+    build:
+      context: ./
+      dockerfile: backend.Dockerfile
+    container_name: playbook-backend
+    ports: 
+      - 3000:5000
+  playbook-frontend:
+    build:
+      context: ./
+      dockerfile: frontend.Dockerfile
+    container_name: playbook-frontend
