@@ -23,9 +23,6 @@ app.use(express.json());
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
-
-
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const multer  = require('multer');
@@ -39,34 +36,10 @@ filename: function (req, file, callback) {
 });
 const upload = multer({ storage: storage });
 
-// Set up multer and specify the destination for uploaded files
-
-app.use('/uploads', express.static('uploads'));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
-});
 
 
-app.post('/submit', upload.single('evidence'), (req, res) => {
-    
-    let data = req.body;
-    let report = generateReport(data);
-    res.send(`<pre>${report}</pre>`+`<img src="/uploads/${req.file.filename}" />`);
-    // Convert the request body to a string
-    const generate_report = JSON.stringify(req.body);
-    const tanggal_waktu = new Date().toISOString().slice(0,19).replace(/:/g, '_');
 
-    // Write the data to a .txt file
-    fs.writeFile(`./uploads/insiden ${data.title}-${tanggal_waktu}.json`, generate_report, (err) => {
-        if (err) throw err;
-        console.log('Data written to file');
-    });
-    // res.send(`<img src="/uploads/${req.file.filename}" />`);
-    // res.send("test");
-});
-
-function generateReport(data) {
+  function generateReport(data) {
     let report = `Jenis Serangan: ${data.attack_type}\n`;
     report += `Tags: ${data.tags}\n`;
     report += `Severity: ${data.severity}\n`;
@@ -93,6 +66,87 @@ function generateReport(data) {
 }
 
 
+// Fungsi untuk menjalankan bash script dengan parameter dari input target
+function runScan(scriptPath, target, resultFile, res) {
+    // Misalnya, target berupa string (bisa juga target.input atau properti lain sesuai struktur req.body)
+    const command = `bash ${scriptPath} "${target}"`;
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error: ${error.message}`);
+        return res.status(500).send(error.message);
+      }
+      if (stderr) {
+        console.error(`Stderr: ${stderr}`);
+      }
+      console.log(`Stdout: ${stdout}`);
+      // Kirim file hasil untuk di-download
+      res.download(path.join(__dirname, resultFile), (err) => {
+        if (err) {
+          console.error("Error sending file: ", err);
+        }
+      });
+    });
+  }
+
+// Set up multer and specify the destination for uploaded files
+
+app.use('/uploads', express.static('uploads'));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
+app.get('/scanners', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/scanners.html'));
+});
+
+
+///
+
+app.post("/subfinder-scan", (req, res) => {
+    let target = req.body;
+    // Contoh: script berada di ./scripts/subfinder-scan.sh dan hasilnya disimpan di ./results/subfinder_result.txt
+    runScan("./scripts/subfinder-scan.sh", target, "./results/subfinder_result.txt", res);
+  });
+  
+  app.post("/get-ip-from-domain", (req, res) => {
+    let target = req.body;
+    // Contoh: script berada di ./scripts/get-ip-from-domain.sh dan hasilnya di ./results/getip_result.txt
+    runScan("./scripts/get-ip-from-domain.sh", target, "./results/getip_result.txt", res);
+  });
+  
+  app.post("/dirsearch-scan", (req, res) => {
+    let target = req.body;
+    // Contoh: script berada di ./scripts/dirsearch-scan.sh dan hasilnya di ./results/dirsearch_result.txt
+    runScan("./scripts/dirsearch-scan.sh", target, "./results/dirsearch_result.txt", res);
+  });
+  
+  app.post("/nuclei-scan", (req, res) => {
+    let target = req.body;
+    // Contoh: script berada di ./scripts/nuclei-scan.sh dan hasilnya di ./results/nuclei_result.txt
+    runScan("./scripts/nuclei-scan.sh", target, "./results/nuclei_result.txt", res);
+  });
+
+
+///
+
+app.post('/submit', upload.single('evidence'), (req, res) => {
+    
+    let data = req.body;
+    let report = generateReport(data);
+    res.send(`<pre>${report}</pre>`+`<img src="/uploads/${req.file.filename}" />`);
+    // Convert the request body to a string
+    const generate_report = JSON.stringify(req.body);
+    const tanggal_waktu = new Date().toISOString().slice(0,19).replace(/:/g, '_');
+
+    // Write the data to a .txt file
+    fs.writeFile(`./uploads/insiden ${data.title}-${tanggal_waktu}.json`, generate_report, (err) => {
+        if (err) throw err;
+        console.log('Data written to file');
+    });
+    // res.send(`<img src="/uploads/${req.file.filename}" />`);
+    // res.send("test");
+});
 
 // Assuming you have a route that accepts a POST request with a Base64 image
 app.post('/upload', (req, res) => {
@@ -109,5 +163,5 @@ app.post('/upload', (req, res) => {
 });
 
 
- 
+
 app.listen(5000, ()=> console.log('Server running at port 5000'));

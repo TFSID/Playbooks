@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC Playbooks</title>
+</head>
+
+<body>
+
+    <h2>Multi-Step Form</h2>
+    <form action="/submit" method="post" enctype="multipart/form-data">
+        <div id="section1">
+            <h3>Report Data Audit</h3>
+            Title/Judul Insiden:<br>
+            <input type="text" name="title"><br>
+            Jenis Serangan:<br>
+            <input type="text" name="attack_type"><br>
+            Tags:<br>
+            <input type="text" name="tags"><br>
+            Severity:<br>
+            <input type="text" name="severity"><br>
+            Description:<br>
+            <input type="text" name="description"><br>
+            uuid:<br>
+            <input type="text" name="uuid"><br>
+            search query:<br>
+            <input type="text" name="query"><br>
+            Action:<br>
+            <input type="text" name="action"><br>
+            
+            <button type="button" onclick="nextSection(1)">Next</button>
+        </div>
+
+        <div id="section2" style="display: none;">
+            <h3>Section 2</h3>
+            Upload Evidence:<br>
+            <input type="file" id="evidence" name="evidence" onchange="encodeImageFileAsURL(this)"><br>
+            <img id="preview" src="" />
+            <button type="button" onclick="nextSection(2)">Next</button>
+        </div>
+        
+        <div id="section3" style="display: none;">
+            <h3>Section 3</h3>
+            Recommendations:<br>
+            <input type="text" name="recommendations"><br>
+            Details:<br>
+            <textarea name="details"></textarea><br>
+            <input type="submit" value="Submit">
+
+        </div>
+    </form>
+
+    <script>
+        function nextSection(section) {
+            // Add validation logic here
+            document.getElementById(`section${section}`).style.display = 'none';
+            document.getElementById(`section${section + 1}`).style.display = 'block';
+        }
+
+        function encodeImageFileAsURL(element) {
+        var file = element.files[0];
+        var reader = new FileReader();
+        reader.onloadend = function() {
+            console.log('RESULT', reader.result);
+            document.getElementById('preview').src = reader.result;
+            document.getElementById('base64img').value = reader.result;
+        }
+        
+        reader.readAsDataURL(file);
+        
+    }
+    
+    </script>
+
+</body>
+
+</html>

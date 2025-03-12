@@ -1,79 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOC Playbooks</title>
-</head>
-
-<body>
-
-    <h2>Multi-Step Form</h2>
-    <form action="/submit" method="post" enctype="multipart/form-data">
-        <div id="section1">
-            <h3>Report Data Audit</h3>
-            Title/Judul Insiden:<br>
-            <input type="text" name="title"><br>
-            Jenis Serangan:<br>
-            <input type="text" name="attack_type"><br>
-            Tags:<br>
-            <input type="text" name="tags"><br>
-            Severity:<br>
-            <input type="text" name="severity"><br>
-            Description:<br>
-            <input type="text" name="description"><br>
-            uuid:<br>
-            <input type="text" name="uuid"><br>
-            search query:<br>
-            <input type="text" name="query"><br>
-            Action:<br>
-            <input type="text" name="action"><br>
-            
-            <button type="button" onclick="nextSection(1)">Next</button>
-        </div>
-
-        <div id="section2" style="display: none;">
-            <h3>Section 2</h3>
-            Upload Evidence:<br>
-            <input type="file" id="evidence" name="evidence" onchange="encodeImageFileAsURL(this)"><br>
-            <img id="preview" src="" />
-            <button type="button" onclick="nextSection(2)">Next</button>
-        </div>
-        
-        <div id="section3" style="display: none;">
-            <h3>Section 3</h3>
-            Recommendations:<br>
-            <input type="text" name="recommendations"><br>
-            Details:<br>
-            <textarea name="details"></textarea><br>
-            <input type="submit" value="Submit">
-
-        </div>
-    </form>
-
-    <script>
-        function nextSection(section) {
-            // Add validation logic here
-            document.getElementById(`section${section}`).style.display = 'none';
-            document.getElementById(`section${section + 1}`).style.display = 'block';
-        }
-
-        function encodeImageFileAsURL(element) {
-        var file = element.files[0];
-        var reader = new FileReader();
-        reader.onloadend = function() {
-            console.log('RESULT', reader.result);
-            document.getElementById('preview').src = reader.result;
-            document.getElementById('base64img').value = reader.result;
-        }
-        
-        reader.readAsDataURL(file);
-        
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SOC Playbooks</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* Custom styles untuk sidebar */
+    .sidebar {
+      min-height: 100vh;
+      background-color: #f8f9fa;
+      padding: 1rem;
     }
-    
-    </script>
+    .sidebar .nav-link {
+      color: #333;
+    }
+    .sidebar .nav-link.active {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+        <div class="position-sticky">
+          <h5 class="pt-3">Dashboard</h5>
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Multi-Step Form Report</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/Scanners">Scanners</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="#evidence">Upload Evidence</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#recommendations">Recommendations</a>
+            </li> -->
+          </ul>
+        </div>
+      </nav>
+      <!-- Main Content -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <h2 class="mt-4">Multi-Step Form</h2>
+        <form action="/submit" method="post" enctype="multipart/form-data">
+          <!-- Section 1: Report Data Audit -->
+          <div id="section1">
+            <h3 id="report">Report Data Audit</h3>
+            <div class="mb-3">
+              <label for="title" class="form-label">Title/Judul Insiden:</label>
+              <input type="text" class="form-control" id="title" name="title" />
+            </div>
+            <div class="mb-3">
+              <label for="attack_type" class="form-label">Jenis Serangan:</label>
+              <input type="text" class="form-control" id="attack_type" name="attack_type" />
+            </div>
+            <div class="mb-3">
+              <label for="tags" class="form-label">Tags:</label>
+              <input type="text" class="form-control" id="tags" name="tags" />
+            </div>
+            <div class="mb-3">
+              <label for="severity" class="form-label">Severity:</label>
+              <input type="text" class="form-control" id="severity" name="severity" />
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Description:</label>
+              <input type="text" class="form-control" id="description" name="description" />
+            </div>
+            <div class="mb-3">
+              <label for="uuid" class="form-label">UUID:</label>
+              <input type="text" class="form-control" id="uuid" name="uuid" />
+            </div>
+            <div class="mb-3">
+              <label for="query" class="form-label">Search Query:</label>
+              <input type="text" class="form-control" id="query" name="query" />
+            </div>
+            <div class="mb-3">
+              <label for="action" class="form-label">Action:</label>
+              <input type="text" class="form-control" id="action" name="action" />
+            </div>
+            <button type="button" class="btn btn-primary" onclick="nextSection(1)">Next</button>
+          </div>
 
+          <!-- Section 2: Upload Evidence -->
+          <div id="section2" style="display: none;">
+            <h3 id="evidence">Upload Evidence</h3>
+            <div class="mb-3">
+              <label for="evidenceFile" class="form-label">Upload Evidence:</label>
+              <input type="file" class="form-control" id="evidenceFile" name="evidence" onchange="encodeImageFileAsURL(this)" />
+            </div>
+            <div class="mb-3">
+              <img id="preview" src="" class="img-fluid" alt="Preview" />
+            </div>
+            <button type="button" class="btn btn-primary" onclick="nextSection(2)">Next</button>
+          </div>
+
+          <!-- Section 3: Recommendations -->
+          <div id="section3" style="display: none;">
+            <h3 id="recommendations">Recommendations</h3>
+            <div class="mb-3">
+              <label for="recommendationsInput" class="form-label">Recommendations:</label>
+              <input type="text" class="form-control" id="recommendationsInput" name="recommendations" />
+            </div>
+            <div class="mb-3">
+              <label for="details" class="form-label">Details:</label>
+              <textarea class="form-control" id="details" name="details" rows="5"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </form>
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function nextSection(section) {
+      // Validasi jika diperlukan bisa ditambahkan di sini
+      document.getElementById(`section${section}`).style.display = 'none';
+      document.getElementById(`section${section + 1}`).style.display = 'block';
+    }
+
+    function encodeImageFileAsURL(element) {
+      var file = element.files[0];
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        console.log('RESULT', reader.result);
+        document.getElementById('preview').src = reader.result;
+      }
+      reader.readAsDataURL(file);
+    }
+  </script>
 </body>
-
 </html>
