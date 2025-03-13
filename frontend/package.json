@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "astro": "^5.4.3",
-    "bootstrap": "^5.3.3"
+    "bootstrap": "^5.3.3",
+    "datatables.net": "^2.2.2",
+    "papaparse": "^5.5.2"
   }
 }

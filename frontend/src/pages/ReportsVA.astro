@@ -1,0 +1,130 @@
+---
+import DashboardLayout from "../layouts/DashboardLayout.astro";
+
+// Dummy data for testing
+const siteData = [
+  {
+    URL: "https://example.com",
+    "Status Codes": "200",
+    Organization: "Example Org",
+    "IP Address": "192.168.0.1",
+    "Redirect URLs": "https://redirect.example.com",
+    Technologies: "Tech1, Tech2"
+  },
+  {
+    URL: "https://another.com",
+    "Status Codes": "404",
+    Organization: "Another Org",
+    "IP Address": "10.0.0.5",
+    "Redirect URLs": "https://redirect.another.com",
+    Technologies: "Tech3, Tech4"
+  }
+];
+---
+
+<DashboardLayout title="Kemenag Site Analysis" pageTitle="Laporan Analisis Situs">
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+        <div class="card mt-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">Laporan Analisis Situs Kemenag</h5>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title mb-3">Ringkasan Data</h5>
+            <div class="mb-3">
+              <label for="csvInput" class="form-label">Import CSV</label>
+              <p>
+                CSV Format Should Be [Domain, URI, Status Code, Organization, IP Address, URI Redirect, Technologies]
+              </p>
+              <input type="file" id="csvInput" accept=".csv" class="form-control" />
+              <div id="uploadStatus" class="mt-2"></div>
+            </div>
+            <div class="table-responsive">
+              <table id="reportTable" class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>URL</th>
+                    <th>Kode Status</th>
+                    <th>Organisasi</th>
+                    <th>Alamat IP</th>
+                    <th>URL Redirect</th>
+                    <th>Teknologi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {siteData.map((row, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <a href={row.URL} target="_blank">{row.URL}</a>
+                      </td>
+                      <td>{row["Status Codes"]}</td>
+                      <td>{row.Organization}</td>
+                      <td>{row["IP Address"]}</td>
+                      <td>{row["Redirect URLs"]}</td>
+                      <td>{row.Technologies}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th>No.</th>
+                    <th>URL</th>
+                    <th>Kode Status</th>
+                    <th>Organisasi</th>
+                    <th>Alamat IP</th>
+                    <th>URL Redirect</th>
+                    <th>Teknologi</th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+</DashboardLayout>
+
+<script>
+  // CSV Import Handler
+  document.getElementById('csvInput').addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const statusDiv = document.getElementById('uploadStatus');
+    statusDiv.textContent = 'Mengunggah dan memproses CSV...';
+    statusDiv.className = 'text-info';
+
+    try {
+      const formData = new FormData();
+      formData.append('csv', file);
+
+      const response = await fetch('YOUR_BACKEND_API_ENDPOINT', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const html = await response.text();
+      
+      // Replace table content
+      const tableContainer = document.querySelector('.table-responsive');
+      tableContainer.innerHTML = html;
+      
+      statusDiv.textContent = 'Data berhasil diimpor dan diproses!';
+      statusDiv.className = 'text-success';
+    } catch (error) {
+      console.error('Error:', error);
+      statusDiv.textContent = `Gagal memproses CSV: ${error.message}`;
+      statusDiv.className = 'text-danger';
+    }
+  });
+</script>
+
+<style>
+  .sidebar {
+    min-height: 100vh;
+  }
+</style>
