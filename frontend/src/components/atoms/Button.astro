@@ -1,0 +1,31 @@
+---
+interface Props {
+  type?: "button" | "submit";
+  variant?: "primary" | "success" | "danger" | "warning" | "info" | "secondary";
+  onClick?: string;
+  class?: string;
+  size?: "sm" | "lg";
+  outline?: boolean;
+}
+
+const { 
+  type = "button", 
+  variant = "primary", 
+  onClick, 
+  class: className = "",
+  size,
+  outline = false
+} = Astro.props;
+
+const sizeClass = size ? `btn-${size}` : '';
+const variantClass = outline ? `btn-outline-${variant}` : `btn-${variant}`;
+---
+
+<button 
+  type={type} 
+  class:list={["btn", variantClass, sizeClass, className]}
+  onclick={onClick}
+>
+  <slot />
+</button>
+

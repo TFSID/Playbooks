@@ -1,0 +1,15 @@
+---
+interface Props {
+  href: string;
+  active?: boolean;
+}
+
+const { href, active = false } = Astro.props;
+---
+
+<li class="nav-item">
+  <a class:list={["nav-link", { active }]} href={href}>
+    <slot />
+  </a>
+</li>
+

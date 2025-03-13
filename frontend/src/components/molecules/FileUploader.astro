@@ -1,0 +1,54 @@
+---
+import FormField from './FormField.astro';
+
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+}
+
+const { id, name, label } = Astro.props;
+---
+
+<div>
+  <FormField 
+    label={label} 
+    id={id} 
+    name={name} 
+    type="file" 
+    onChange="encodeImageFileAsURL(this)"
+  />
+  <div class="mb-3">
+    <div class="card">
+      <div class="card-body">
+        <img id="preview" src="/placeholder.svg" class="img-fluid d-none" alt="Preview" />
+        <p id="no-preview" class="text-muted mb-0">No file selected</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  function encodeImageFileAsURL(element) {
+    var file = element.files[0];
+    var preview = document.getElementById('preview');
+    var noPreview = document.getElementById('no-preview');
+    
+    if (file) {
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        preview.src = reader.result;
+        preview.classList.remove('d-none');
+        noPreview.classList.add('d-none');
+      }
+      reader.readAsDataURL(file);
+    } else {
+      preview.classList.add('d-none');
+      noPreview.classList.remove('d-none');
+    }
+  }
+  
+  // Make the function available globally
+  window.encodeImageFileAsURL = encodeImageFileAsURL;
+</script>
+

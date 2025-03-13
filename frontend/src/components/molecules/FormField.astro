@@ -1,0 +1,27 @@
+---
+import Input from '../atoms/Input.astro';
+
+interface Props {
+  label: string;
+  id: string;
+  name: string;
+  type?: "text" | "file";
+  onChange?: string;
+  rows?: number;
+}
+
+const { label, id, name, type = "text", onChange, rows } = Astro.props;
+---
+
+<div class="mb-3">
+  <label for={id} class="form-label">{label}</label>
+  <Input 
+    type={type} 
+    id={id} 
+    name={name} 
+    onChange={onChange}
+    rows={rows}
+  />
+  <slot />
+</div>
+

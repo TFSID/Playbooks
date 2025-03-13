@@ -1,0 +1,86 @@
+---
+import FormSection from './FormSection.astro';
+import FormField from '../molecules/FormField.astro';
+import FileUploader from '../molecules/FileUploader.astro';
+---
+
+<form action="/submit" method="post" enctype="multipart/form-data">
+  <!-- Section 1: Report Data Audit -->
+  <FormSection id="section1" title="Report Data Audit" nextSection={1}>
+    <div class="row">
+      <div class="col-md-6">
+        <FormField label="Title/Judul Insiden:" id="title" name="title" />
+      </div>
+      <div class="col-md-6">
+        <FormField label="Jenis Serangan:" id="attack_type" name="attack_type" />
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-4">
+        <FormField label="Tags:" id="tags" name="tags" />
+      </div>
+      <div class="col-md-4">
+        <FormField label="Severity:" id="severity" name="severity" />
+      </div>
+      <div class="col-md-4">
+        <FormField label="UUID:" id="uuid" name="uuid" />
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <FormField label="Description:" id="description" name="description" />
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-6">
+        <FormField label="Search Query:" id="query" name="query" />
+      </div>
+      <div class="col-md-6">
+        <FormField label="Action:" id="action" name="action" />
+      </div>
+    </div>
+  </FormSection>
+
+  <!-- Section 2: Upload Evidence -->
+  <FormSection id="section2" title="Upload Evidence" nextSection={2} isVisible={false}>
+    <div class="row">
+      <div class="col-md-8">
+        <FileUploader 
+          id="evidenceFile" 
+          name="evidence" 
+          label="Upload Evidence:" 
+        />
+      </div>
+    </div>
+  </FormSection>
+
+  <!-- Section 3: Recommendations -->
+  <FormSection id="section3" title="Recommendations" isLastSection={true} isVisible={false}>
+    <div class="row">
+      <div class="col-12">
+        <FormField label="Recommendations:" id="recommendationsInput" name="recommendations" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <FormField label="Details:" id="details" name="details" rows={5} />
+      </div>
+    </div>
+  </FormSection>
+</form>
+
+<script is:inline>
+  function nextSection(section) {
+    // Hide current section
+    document.getElementById(`section${section}`).style.display = 'none';
+    // Show next section
+    document.getElementById(`section${section + 1}`).style.display = 'block';
+  }
+  
+  // Make the function available globally
+  window.nextSection = nextSection;
+</script>
+

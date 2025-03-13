@@ -1,0 +1,49 @@
+---
+interface Props {
+  type?: "text" | "file";
+  id: string;
+  name: string;
+  class?: string;
+  onChange?: string;
+  rows?: number;
+}
+
+const { 
+  type = "text", 
+  id, 
+  name, 
+  class: className = "", 
+  onChange,
+  rows
+} = Astro.props;
+---
+
+{type === "text" && !rows && (
+  <input 
+    type={type} 
+    class:list={["form-control", className]} 
+    id={id} 
+    name={name} 
+    onchange={onChange}
+  />
+)}
+
+{type === "file" && (
+  <input 
+    type={type} 
+    class:list={["form-control", className]} 
+    id={id} 
+    name={name} 
+    onchange={onChange}
+  />
+)}
+
+{rows && (
+  <textarea 
+    class:list={["form-control", className]} 
+    id={id} 
+    name={name} 
+    rows={rows}
+  ></textarea>
+)}
+

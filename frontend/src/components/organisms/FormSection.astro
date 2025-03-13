@@ -1,0 +1,49 @@
+---
+import Button from '../atoms/Button.astro';
+
+interface Props {
+  id: string;
+  title: string;
+  isVisible?: boolean;
+  nextSection?: number;
+  isLastSection?: boolean;
+}
+
+const { 
+  id, 
+  title, 
+  isVisible = true, 
+  nextSection, 
+  isLastSection = false 
+} = Astro.props;
+---
+
+<div id={id} style={isVisible ? "" : "display: none;"} class="mb-4">
+  <div class="card">
+    <div class="card-header bg-light">
+      <h3 id={id.replace("section", "")} class="mb-0 fs-5">{title}</h3>
+    </div>
+    <div class="card-body">
+      <slot />
+      
+      <div class="d-flex justify-content-end mt-3">
+        {!isLastSection && (
+          <Button 
+            type="button" 
+            variant="primary" 
+            onClick={`nextSection(${nextSection})`}
+          >
+            Next
+          </Button>
+        )}
+        
+        {isLastSection && (
+          <Button type="submit" variant="success">
+            Submit
+          </Button>
+        )}
+      </div>
+    </div>
+  </div>
+</div>
+

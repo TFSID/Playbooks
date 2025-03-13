@@ -1,0 +1,48 @@
+---
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+---
+
+<DashboardLayout title="SOC Playbooks - Scanners" pageTitle="Scanners">
+  <div class="card">
+    <div class="card-header">
+      Scanner Tools
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Available Scanners</h5>
+      <p class="card-text">Select a scanner to begin your security assessment.</p>
+      
+      <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Vulnerability Scanner</h5>
+              <p class="card-text">Scan for known vulnerabilities in your systems.</p>
+              <button class="btn btn-primary">Launch Scanner</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Network Scanner</h5>
+              <p class="card-text">Discover and map network devices and services.</p>
+              <button class="btn btn-primary">Launch Scanner</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Malware Scanner</h5>
+              <p class="card-text">Detect malicious software and potential threats.</p>
+              <button class="btn btn-primary">Launch Scanner</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DashboardLayout>
+
