@@ -1,0 +1,146 @@
+---
+interface Props {
+  name: string;
+  placeholder?: string;
+  class?: string;
+}
+
+const { 
+  name, 
+  placeholder = "e.g examples.com", 
+  class: className = "card col-md-4 w-100" 
+} = Astro.props;
+---
+
+<div class="domain-input-container position-relative">
+  <input 
+    style="height: 3rem;" 
+    class={className} 
+    name={name} 
+    type="text" 
+    placeholder={placeholder}
+    onclick="handleDomainInputClick(this)"
+  />
+  <div id="domain-suggestions" class="domain-suggestions d-none"></div>
+  <small id="domain-feedback" class="form-text text-muted mt-1"></small>
+</div>
+
+<script is:inline>
+  // Function to handle the input click
+  function handleDomainInputClick(inputElement) {
+    // Visual feedback when clicked
+    inputElement.classList.add('domain-input-active');
+    
+    // Clear any previous validation messages
+    document.getElementById('domain-feedback').textContent = '';
+    
+    // Show recent domains or suggestions if available
+    const suggestions = getRecentDomains();
+    const suggestionsElement = document.getElementById('domain-suggestions');
+    
+    if (suggestions.length > 0) {
+      suggestionsElement.innerHTML = '';
+      suggestions.forEach(domain => {
+        const suggestion = document.createElement('div');
+        suggestion.className = 'domain-suggestion p-2 border-bottom';
+        suggestion.textContent = domain;
+        suggestion.onclick = function(e) {
+          e.stopPropagation(); // Prevent triggering input's onclick again
+          inputElement.value = domain;
+          suggestionsElement.classList.add('d-none');
+        };
+        suggestionsElement.appendChild(suggestion);
+      });
+      suggestionsElement.classList.remove('d-none');
+    }
+    
+    // Optional: Focus the input
+    inputElement.focus();
+  }
+  
+  // Function to get recent domains (could be from localStorage or other source)
+  function getRecentDomains() {
+    // In a real application, you might get this from localStorage or an API
+    const storedDomains = localStorage.getItem('recentDomains');
+    if (storedDomains) {
+      return JSON.parse(storedDomains);
+    }
+    return []; // Return empty array if no recent domains
+  }
+  
+  // Function to save a domain to recent domains
+  function saveDomain(domain) {
+    if (!domain) return;
+    
+    let recentDomains = getRecentDomains();
+    // Add to beginning of array and remove duplicates
+    recentDomains = [domain, ...recentDomains.filter(d => d !== domain)];
+    // Keep only the most recent 5 domains
+    recentDomains = recentDomains.slice(0, 5);
+    
+    localStorage.setItem('recentDomains', JSON.stringify(recentDomains));
+    return recentDomains;
+  }
+  
+  // Function to validate domain format
+  function validateDomain(domain) {
+    // Simple domain validation regex
+    const domainRegex = /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+    return domainRegex.test(domain);
+  }
+  
+  // Close suggestions when clicking outside
+  document.addEventListener('click', function(e) {
+    const suggestionsElement = document.getElementById('domain-suggestions');
+    const domainInputs = document.querySelectorAll('.domain-input-container input');
+    
+    let clickedInside = false;
+    domainInputs.forEach(input => {
+      if (input.contains(e.target)) {
+        clickedInside = true;
+      }
+    });
+    
+    if (!clickedInside && !suggestionsElement.contains(e.target)) {
+      suggestionsElement.classList.add('d-none');
+      domainInputs.forEach(input => {
+        input.classList.remove('domain-input-active');
+      });
+    }
+  });
+  
+  // Make functions available globally
+  window.handleDomainInputClick = handleDomainInputClick;
+  window.saveDomain = saveDomain;
+  window.validateDomain = validateDomain;
+</script>
+
+<style>
+  .domain-input-active {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-color: #86b7fe;
+  }
+  
+  .domain-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .domain-suggestion {
+    cursor: pointer;
+  }
+  
+  .domain-suggestion:hover {
+    background-color: #f8f9fa;
+  }
+</style>
+

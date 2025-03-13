@@ -1,0 +1,151 @@
+---
+interface Props {
+  scannerType: 'nuclei' | 'dirsearch' | 'subdomain' | 'ip' | string;
+  label?: string;
+  class?: string;
+}
+
+const { 
+  scannerType, 
+  label = 'Launch Scanner', 
+  class: className = '' 
+} = Astro.props;
+
+const buttonId = `${scannerType}-btn`;
+---
+
+<button 
+  id={buttonId} 
+  class:list={["btn btn-primary", className]} 
+  data-scanner-type={scannerType}
+  onclick={`runScanner('${scannerType}')`}
+>
+  {label}
+</button>
+
+<script>
+  // This script will be bundled with the component
+  // and executed when the component is used
+  import { scannerApi } from '../../utils/api-client.js';
+  
+  // Make the function available globally
+  window.runScanner = async function(scannerType) {
+    const domainInput = document.querySelector('input[name="target_domain"]');
+    if (!domainInput) {
+      console.error('Domain input not found');
+      return;
+    }
+    
+    const domain = domainInput.value.trim();
+    const buttonId = `${scannerType}-btn`;
+    
+    // Validate domain
+    if (!domain) {
+      alert('Please enter a target domain first');
+      domainInput.focus();
+      return;
+    }
+    
+    if (!validateDomain(domain)) {
+      alert('Please enter a valid domain');
+      domainInput.focus();
+      return;
+    }
+    
+    // Save domain to recent domains if the function exists
+    if (typeof window.saveDomain === 'function') {
+      window.saveDomain(domain);
+    }
+    
+    // Update feedback message
+    const feedbackElement = document.getElementById('domain-feedback');
+    if (feedbackElement) {
+      feedbackElement.textContent = `Initiating ${scannerType} scan on ${domain}...`;
+      feedbackElement.className = 'form-text text-info mt-1';
+    }
+    
+    // Set button to loading state
+    setButtonLoading(buttonId, true);
+    
+    try {
+      // Use the scanner API to make the request
+      let data;
+      
+      // Call the appropriate scanner API method
+      if (scannerType === 'nuclei') {
+        data = await scannerApi.nuclei(domain);
+      } else if (scannerType === 'dirsearch') {
+        data = await scannerApi.dirsearch(domain);
+      } else if (scannerType === 'subdomain') {
+        data = await scannerApi.subdomain(domain);
+      } else if (scannerType === 'ip') {
+        data = await scannerApi.ip(domain);
+      } else {
+        // For custom scanners
+        data = await scannerApi.custom(scannerType, domain);
+      }
+      
+      // Update feedback message
+      if (feedbackElement) {
+        feedbackElement.textContent = `Scan completed: ${scannerType} on ${domain}`;
+        feedbackElement.className = 'form-text text-success mt-1';
+      }
+      
+      // Display the results if the function exists
+      if (typeof window.displayResults === 'function') {
+        window.displayResults(scannerType, data);
+      }
+      
+      console.log(`${scannerType} scan results:`, data);
+    } catch (error) {
+      console.error(`Error during ${scannerType} scan:`, error);
+      
+      // Update feedback message
+      if (feedbackElement) {
+        feedbackElement.textContent = `Error during scan: ${error.message}`;
+        feedbackElement.className = 'form-text text-danger mt-1';
+      }
+      
+      // Display error in results if the function exists
+      if (typeof window.displayResults === 'function') {
+        window.displayResults(scannerType, `Error: ${error.message}`);
+      }
+    } finally {
+      // Reset button state
+      setButtonLoading(buttonId, false);
+    }
+  }
+  
+  // Helper function to validate domain format
+  function validateDomain(domain) {
+    // Use the global function if it exists
+    if (typeof window.validateDomain === 'function') {
+      return window.validateDomain(domain);
+    }
+    
+    // Fallback validation
+    const domainRegex = /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+    return domainRegex.test(domain);
+  }
+  
+  // Helper function to set button loading state
+  function setButtonLoading(buttonId, isLoading) {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
+    
+    if (isLoading) {
+      const originalText = button.textContent;
+      button.setAttribute('data-original-text', originalText);
+      button.innerHTML = `
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <span class="ms-1">Scanning...</span>
+      `;
+      button.disabled = true;
+    } else {
+      const originalText = button.getAttribute('data-original-text') || 'Launch Scanner';
+      button.innerHTML = originalText;
+      button.disabled = false;
+    }
+  }
+</script>
+

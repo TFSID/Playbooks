@@ -1,0 +1,131 @@
+---
+import DashboardLayout from "../layouts/DashboardLayout.astro";
+---
+
+<DashboardLayout title="SOC Playbooks - Scanners" pageTitle="Scanners">
+  <div class="card">
+    <div class="card-header">Scanner Tools</div>
+    <div class="card-body">
+      <h5 class="card-title">Available Scanners</h5>
+      <p class="card-text">
+        Select a scanner to begin your security assessment.
+      </p>
+      <h5 class="card-title">Target Domain</h5>
+      <input style="height: 3rem;" class="card col-md-4 w-100" name="target_domain" type="text" placeholder="e.g examples.com">
+      <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Nuclei Scanner</h5>
+              <p class="card-text">
+                Scan for known vulnerabilities in your systems.
+              </p>
+              <button onclick="" class="btn btn-primary">Launch Scanner</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Dirsearch Scanner</h5>
+              <p class="card-text">Finding Directories/API From Endpoints.</p>
+              <br>
+              <button class="btn btn-primary">Launch Scanner</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Subdomain Finder + HTTPX</h5>
+              <p class="card-text">
+                Finds Active Subdomains with subfinder and HTTPX combinations.
+              </p>
+              <button class="btn btn-primary">Launch Scanner</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Get IP From Domain</h5>
+              <p class="card-text">
+                Discover IP Address from the target domain.
+              </p>
+              <button class="btn btn-primary">Launch Scanner</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DashboardLayout>
+
+<script is:inline>
+  // Handle form submission
+  function handleScanSubmit(event) {
+    event.preventDefault();
+    
+    const domainInput = document.querySelector('input[name="target_domain"]');
+    const domain = domainInput.value.trim();
+    const feedbackElement = document.getElementById('domain-feedback');
+    
+    // Validate domain
+    if (!domain) {
+      feedbackElement.textContent = 'Please enter a domain';
+      feedbackElement.className = 'form-text text-danger mt-1';
+      return false;
+    }
+    
+    if (!validateDomain(domain)) {
+      feedbackElement.textContent = 'Please enter a valid domain';
+      feedbackElement.className = 'form-text text-danger mt-1';
+      return false;
+    }
+    
+    // Save domain to recent domains
+    saveDomain(domain);
+    
+    // Show success message
+    feedbackElement.textContent = 'Scan initiated for ' + domain;
+    feedbackElement.className = 'form-text text-success mt-1';
+    
+    // Here you would typically initiate the scan
+    console.log('Starting scan for domain:', domain);
+    
+    // Return false to prevent form submission
+    return false;
+  }
+  
+  // Handle scanner selection
+  function selectScanner(scannerType) {
+    const domainInput = document.querySelector('input[name="target_domain"]');
+    const domain = domainInput.value.trim();
+    
+    if (!domain) {
+      alert('Please enter a target domain first');
+      domainInput.focus();
+      return;
+    }
+    
+    if (!validateDomain(domain)) {
+      alert('Please enter a valid domain');
+      domainInput.focus();
+      return;
+    }
+    
+    // Save domain to recent domains
+    saveDomain(domain);
+    
+    // Here you would typically initiate the specific scanner
+    console.log(`Starting ${scannerType} scan for domain:`, domain);
+    alert(`Starting ${scannerType} scan for ${domain}`);
+  }
+  
+  // Make functions available globally
+  window.handleScanSubmit = handleScanSubmit;
+  window.selectScanner = selectScanner;
+</script>

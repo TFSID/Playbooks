@@ -1,0 +1,123 @@
+---
+interface Props {
+  scannerType: string;
+  externalUrl: string;
+  label?: string;
+  class?: string;
+}
+
+const { 
+  scannerType, 
+  externalUrl,
+  label = 'Launch External Scanner', 
+  class: className = '' 
+} = Astro.props;
+
+const buttonId = `external-${scannerType}-btn`;
+---
+
+<button 
+  id={buttonId} 
+  class:list={["btn btn-outline-primary mt-2", className]} 
+  data-scanner-type={scannerType}
+  data-external-url={externalUrl}
+  onclick={`runExternalScanner('${scannerType}', '${externalUrl}')`}
+>
+  {label}
+</button>
+
+<script>
+  // This script will be bundled with the component
+  // and executed when the component is used
+  import { ScannerService } from '../../utils/scanner-service.js';
+  
+  // Make the function available globally
+  window.runExternalScanner = async function(scannerType, externalUrl) {
+    const domainInput = document.querySelector('input[name="target_domain"]');
+    if (!domainInput) {
+      console.error('Domain input not found');
+      return;
+    }
+    
+    const domain = domainInput.value.trim();
+    const buttonId = `external-${scannerType}-btn`;
+    
+    // Validate domain
+    if (!domain) {
+      alert('Please enter a target domain first');
+      domainInput.focus();
+      return;
+    }
+    
+    if (!ScannerService.validateDomain(domain)) {
+      alert('Please enter a valid domain');
+      domainInput.focus();
+      return;
+    }
+    
+    // Update feedback message
+    const feedbackElement = document.getElementById('domain-feedback');
+    if (feedbackElement) {
+      feedbackElement.textContent = `Initiating external ${scannerType} scan on ${domain}...`;
+      feedbackElement.className = 'form-text text-info mt-1';
+    }
+    
+    // Set button to loading state
+    setButtonLoading(buttonId, true);
+    
+    try {
+      // Run the external scan
+      const data = await ScannerService.runExternalScan(externalUrl, domain);
+      
+      // Update feedback message
+      if (feedbackElement) {
+        feedbackElement.textContent = `External scan completed: ${scannerType} on ${domain}`;
+        feedbackElement.className = 'form-text text-success mt-1';
+      }
+      
+      // Display the results if the function exists
+      if (typeof window.displayResults === 'function') {
+        window.displayResults(`external-${scannerType}`, data);
+      }
+      
+      console.log(`External ${scannerType} scan results:`, data);
+    } catch (error) {
+      console.error(`Error during external ${scannerType} scan:`, error);
+      
+      // Update feedback message
+      if (feedbackElement) {
+        feedbackElement.textContent = `Error during scan: ${error.message}`;
+        feedbackElement.className = 'form-text text-danger mt-1';
+      }
+      
+      // Display error in results if the function exists
+      if (typeof window.displayResults === 'function') {
+        window.displayResults(`external-${scannerType}`, `Error: ${error.message}`);
+      }
+    } finally {
+      // Reset button state
+      setButtonLoading(buttonId, false);
+    }
+  }
+  
+  // Helper function to set button loading state
+  function setButtonLoading(buttonId, isLoading) {
+    const button = document.getElementById(buttonId);
+    if (!button) return;
+    
+    if (isLoading) {
+      const originalText = button.textContent;
+      button.setAttribute('data-original-text', originalText);
+      button.innerHTML = `
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <span class="ms-1">Scanning...</span>
+      `;
+      button.disabled = true;
+    } else {
+      const originalText = button.getAttribute('data-original-text') || 'Launch Scanner';
+      button.innerHTML = originalText;
+      button.disabled = false;
+    }
+  }
+</script>
+
