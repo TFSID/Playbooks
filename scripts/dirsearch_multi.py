@@ -4,7 +4,7 @@ import os
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 
-output_dir = "vapt_results"
+output_dir = "dirsearch-result"
 os.makedirs(output_dir, exist_ok=True)
 
 def sanitize_name(target):
@@ -57,7 +57,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description=' Dirsearch MultiThreads')
     
     # Positional Arguments
-    parser.add_argument('target', help='target/url to be scan')
+    parser.add_argument('--t', help='target/url to be scan')
+    parser.add_argument('--list', help='target/url list to be scanned')
     
     args = parser.parse_args()
     return args
@@ -65,6 +66,18 @@ def parse_args():
 # Example usage
 if __name__ == "__main__":
     args = parse_args()
-    print(f'Target= {args.target}')
-    target_url = args.target
-    endpoint_enum(target_url)
+    if args.list:
+        try:
+            with open(args.list, 'r') as f:
+                targets = [line.strip() for line in f.readlines()]
+                print(f'Multi Scannings: {args.list}')
+                for target in targets:
+                    print(f'Scanning: {target}')
+                    endpoint_enum(target)
+            print(f'List')
+        except Exception as e:
+            print(f'{e}')
+    else:
+        target_url = args.target
+        print(f'Single Scanning Target= {args.target}')
+        endpoint_enum(target_url)
