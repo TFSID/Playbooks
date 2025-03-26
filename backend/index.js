@@ -159,6 +159,11 @@ app.post("/dirsearch-scan", (req, res) => {
   runScan("./scripts/dirsearch-scan.sh", target, "./results/dirsearch_result.txt", res)
 })
 
+app.post("/auto-scan", (req, res) => {
+  const target = req.body.domain
+  runScan("python3 ./scripts/dirsearch-scan.sh", target, "./results/dirsearch_result.txt", res)
+})
+
 app.post("/nuclei-scan", (req, res) => {
   const target = req.body.domain
   runScan("./scripts/nuclei_scan_target.sh", target, `./results/${target}_nuclei_result.log`, res)

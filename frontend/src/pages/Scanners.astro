@@ -63,6 +63,22 @@ import ExternalScannerButton from "../components/scanners/ExternalScannerButton.
         <div class="col-md-4 mb-3">
           <div class="card h-100">
             <div class="card-body">
+              <h5 class="card-title">One Click Scanner</h5>
+              <p class="card-text">All in One Click Automated Scanner.</p>
+              <br>
+              <ScannerButton scannerType="autoscan" />
+              <ExternalScannerButton 
+                scannerType="vulnerability" 
+                externalUrl="https://127.0.0.1:5000/auto-scan" 
+                label="Run External Scan" 
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
               <h5 class="card-title">Subdomain Finder + HTTPX</h5>
               <p class="card-text">
                 Finds Active Subdomains with subfinder and HTTPX combinations.
