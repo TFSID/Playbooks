@@ -2,6 +2,7 @@ import subprocess
 import re
 import os
 import argparse
+import sys
 from concurrent.futures import ThreadPoolExecutor
 
 output_dir = "dirsearch-result"
@@ -66,6 +67,7 @@ def parse_args():
 # Example usage
 if __name__ == "__main__":
     args = parse_args()
+    # sys.exit("oke")
     if args.list:
         try:
             with open(args.list, 'r') as f:
