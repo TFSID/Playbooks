@@ -1,13 +1,15 @@
 services:
-  playbook-backend:
+  backend:
     build:
-      context: ./
-      dockerfile: backend.Dockerfile
-    container_name: playbook-backend
+      context: backend/
+      dockerfile: Dockerfile
+    container_name: pentest_container
     ports: 
-      - 3000:5000
-  playbook-frontend:
+      - 5000:5000
+  frontend:
     build:
-      context: ./
-      dockerfile: frontend.Dockerfile
-    container_name: playbook-frontend
+      context: frontend/
+      dockerfile: Dockerfile
+    container_name: SecOps-Frontend
+    ports:
+      - 3000:4321

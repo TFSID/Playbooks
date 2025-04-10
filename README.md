@@ -33,6 +33,10 @@ To get started:
    ```bash
    cd /frontend
    npm install
-   npm start
+   npm run dev -- --help
+   ```
+   or
+   ```
+   npx astro dev --help
    ```
    The Frontend build using astro.js technologies that's why can be run using `npm start`
