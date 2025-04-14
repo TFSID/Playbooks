@@ -1,12 +1,12 @@
-'use strict';
-var User = require('../database/user');
+// var User = require('../database/user');
+import User from "../database/User.js"
 
 /**
  * Get Users details from database.
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.getUsers = async (req, res) => {
+export const getUsers = async (req, res) => {
 	try {
 		let results = await User.getAllUsers();
 		if (results && results.length) {
@@ -27,7 +27,7 @@ exports.getUsers = async (req, res) => {
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.createUser = async (req, res) => {
+export const createUser = async (req, res) => {
 	try {
 		await User.saveUser(req.body);
 		return res.status(201).json();
@@ -44,7 +44,7 @@ exports.createUser = async (req, res) => {
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
 	try {
 		let data = req.body;
 		let filter = {
@@ -69,7 +69,7 @@ exports.updateUser = async (req, res) => {
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.getUserDetails = async (req, res) => {
+export const getUserDetails = async (req, res) => {
 	try {
 		let filter = {
 			id: req.params.userId
@@ -93,7 +93,7 @@ exports.getUserDetails = async (req, res) => {
  * @param  {Object} req request object
  * @param  {Object} res response object
  */
-exports.deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
 	try {
 		let filter = {
 			id: req.params.userId

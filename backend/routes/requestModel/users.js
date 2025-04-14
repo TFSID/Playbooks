@@ -51,3 +51,5 @@ module.exports = {
         excludeFromSwagger: false // Make it true if need to exclude apis from swagger.
     }
 };
+
+export default users

@@ -1,10 +1,12 @@
 'use strict';
 import express from "express"
-import { validation } from "swagger-generator-express"
+import pkg from "swagger-generator-express"
+// import { validation } from "swagger-generator-express"
 import userController from "../controller/user.js"
-import requestModel from "./requestModel/user.js"
+import requestModel from "./requestModel/users.js"
 
 var router = express.Router();
+const { validation } = pkg;
 
 // var express = require('express');
 // var router = express.Router();

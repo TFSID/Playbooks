@@ -15,8 +15,32 @@ import swaggerSpec from "./swagger.js"
 // import swaggerDocument from "./routes/api.json"
 // import { middlewareObj } from "./middleware/middleware-name1.js"
 
+
+// Swagger express generator
+// import userController from "./controller/user.js"
+// import requestModel from "./routes/requestModel/users.js"
+import swagger from "swagger-generator-express"
+
 import pkg from "swagger-generator-express"
 const { validation } = pkg;
+
+const options = {
+	title: "swagger-generator-express",
+	version: "1.0.0",
+	host: "localhost:5000",
+	basePath: "/",
+	schemes: ["http", "https"],
+	securityDefinitions: {
+		Bearer: {
+			description: 'Example value:- Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU5MmQwMGJhNTJjYjJjM',
+			type: 'apiKey',
+			name: 'Authorization',
+			in: 'header'
+		}
+	},
+	security: [{Bearer: []}],
+	defaultSecurity: 'Bearer'
+};
 
 
 dotenv.config()
@@ -58,14 +82,16 @@ app.get('/api/hello', (req, res) => {
 // swaggerUi.setUpRoutes(middlewareObj, app, swaggerDocument, useBasePath);
 
 
-const specs = swaggerSpec;
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocument)
-);
+// app.use(
+//   "/api-docs",
+//   swaggerUi.serve,
+//   swaggerUi.setup(swaggerDocument)
+// );
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-  console.log(`Swagger docs at http://localhost:${port}/api-docs`);
-});
+swagger.serveSwagger(app, "/swagger", options, {routePath : './routes/', requestModelPath: './routes/requestModel', responseModelPath: './routes/responseModel'});
+
+
+// app.listen(port, () => {
+//   console.log(`Server running on http://localhost:${port}`);
+//   console.log(`Swagger docs at http://localhost:${port}/api-docs`);
+// });
