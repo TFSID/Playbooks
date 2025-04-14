@@ -6,6 +6,9 @@ services:
     container_name: pentest_container
     ports: 
       - 5000:5000
+    volumes:
+      - ./backend:/app
+    working_dir: /app
   frontend:
     build:
       context: frontend/
@@ -13,3 +16,8 @@ services:
     container_name: SecOps-Frontend
     ports:
       - 3000:4321
+      # for development purpose only
+      - 3001:4322
+    volumes:
+      - ./frontend:/app
+    working_dir: /app

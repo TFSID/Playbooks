@@ -1,0 +1,29 @@
+---
+interface Props {
+  externalUrl: string;
+  buttonText: string;
+  label?: string;
+  class?: string;
+}
+
+const { 
+  externalUrl,
+  buttonText,
+  class: className = '' 
+} = Astro.props;
+
+// const buttonId = `external-${scannerType}-btn`;
+---
+
+<button
+  class:list={["btn btn-outline-primary mt-2", className]} 
+  data-external-url={externalUrl}
+>
+<a href={externalUrl}>{buttonText}</a>
+</button>
+
+<script>
+    function sendRequest() {
+        fetch('${externalUrl}')
+    }
+</script>

@@ -1,9 +1,18 @@
 ---
 import DashboardLayout from '../layouts/DashboardLayout.astro';
 import MultiStepForm from '../components/organisms/MultiStepForm.astro';
+
+import MultiLanguageText from "../components/ui/MultiLanguageText.astro"
+import GlobalLanguageToggle from "../components/ui/GlobalLanguageToggle.astro"
+
 ---
 
 <DashboardLayout title="SOC Playbooks" pageTitle="Multi-Step Form">
+  <!-- <LanguageToggleButton
+  englishText="This page serves as a centralized platform for managing incident response playbooks, designed to assist the Security Operations Center (SOC) in efficiently escalating and reporting security incidents. By providing structured and clear data, it ensures consistent and effective incident handling, aligning with established cybersecurity best practices."
+  indonesianText="Halaman ini berfungsi sebagai platform terpusat untuk mengelola playbook respons insiden, dirancang untuk membantu Pusat Operasi Keamanan (SOC) dalam meningkatkan dan melaporkan insiden keamanan secara efisien. Dengan menyediakan data yang terstruktur dan jelas, ini memastikan penanganan insiden yang konsisten dan efektif, sejalan dengan praktik terbaik keamanan siber yang telah ditetapkan."
+  class=""
+  > -->
   <MultiStepForm />
 </DashboardLayout>
 

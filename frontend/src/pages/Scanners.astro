@@ -2,7 +2,7 @@
 import DashboardLayout from "../layouts/DashboardLayout.astro";
 import ScannerButton from "../components/scanners/ScannerButton.astro";
 import ExternalScannerButton from "../components/scanners/ExternalScannerButton.astro";
-
+import CustomBtn from "../components/ui/CustomBtn.astro"
 ---
 
 <DashboardLayout title="SOC Playbooks - Scanners" pageTitle="Scanners">
@@ -26,6 +26,37 @@ import ExternalScannerButton from "../components/scanners/ExternalScannerButton.
         <div id="domain-suggestions" class="domain-suggestions d-none"></div>
         <small id="domain-feedback" class="form-text text-muted mt-1"></small>
       </div>
+      <h5 class="card-title">Output Name</h5>
+      <div class="result-input-container position-relative mb-3">
+        <input
+          style="height: 3rem;"
+          class="card col-md-4 w-100"
+          name="target_domain"
+          type="text"
+          placeholder="e.g subdomain-nuclei-scan-result.txt"
+          onclick="handleDomainInputClick(this)"
+        />
+        <div id="domain-suggestions" class="domain-suggestions d-none"></div>
+        <small id="domain-feedback" class="form-text text-muted mt-1"></small>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Check Backend IP</h5>
+              <p class="card-text">
+                Check The Backend IP Before Performing Scanners.
+              </p>
+              <!-- <ScannerButton scannerType="nuclei" /> -->
+              <CustomBtn
+                buttonText="Check Now"
+                externalUrl="http://127.0.0.1:5000/check-ip"
+              />
+            </div>
+          </div>
+        </div>
+
       <div class="row mt-4">
         <div class="col-md-4 mb-3">
           <div class="card h-100">

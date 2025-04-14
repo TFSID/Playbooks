@@ -13,6 +13,11 @@ Pre-requirements for running this projects:
 
 ---
 
+
+NOTE:
+   - Dockerized Frontend: localhost:3000
+   - Dockerized Backend: localhost:5000
+
 To get started:
 
 1. Clone the repository:

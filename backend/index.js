@@ -9,6 +9,7 @@ import fs from "fs"
 import { exec } from "child_process" // Added missing import
 import { createRequire } from "module"
 import { Http2ServerRequest } from "http2"
+import { error } from "console"
 
 // Configure environment variables
 dotenv.config()
@@ -78,11 +79,14 @@ function generateReport(data) {
   return report
 }
 
+function displayScanResult(file) {
+  return file
+}
 
 
 // Function to run bash scripts
 function runScan(scriptPath, target, resultFile, res) {
-  const command = `bash ${scriptPath} "${target}"`
+  const command = `bash ${scriptPath} "${target}" "${resultFile}"`
   exec(command, (error, stdout, stderr) => {
     if (error) {
       console.error(`Error: ${error.message}`)
@@ -92,6 +96,7 @@ function runScan(scriptPath, target, resultFile, res) {
       console.error(`Stderr: ${stderr}`)
     }
     console.log(`Stdout: ${stdout}`)
+    // res.send("")
     // Send file for download
     res.download(path.join(__dirname, resultFile), (err) => {
       if (err) {
@@ -102,13 +107,28 @@ function runScan(scriptPath, target, resultFile, res) {
   })
 }
 
+function checkIP(res) {
+  const command = `curl ifconfig.me`
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error: ${error.message}`)
+      return res.status(500).send(err.message)
+    }
+    if (stderr) {
+      console.error(`Stderr: ${stderr}`)
+    }
+    console.log(`Stdout: ${stdout}`)
+    res.send(`Your Backend IP Is: ${stdout}, stderr: ${stderr}`);
+  })
+}
+
 // Routes
 // app.get("/", (req, res) => {
 //   res.sendFile(path.join(__dirname, "../frontend/index.html"))
 // })
 
 app.get("/", (req, res) => {
-  let targetUrl = 'http://localhost:4321';
+  let targetUrl = 'http://localhost:3000';
   http.get(targetUrl, (response) => {
     if (response.statusCode === 200) {
       res.redirect(targetUrl);
@@ -123,9 +143,9 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/scanners", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/scanners.html"))
-})
+// app.get("/scanners", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../frontend/scanners.html"))
+// })
 
 // Scanner routes
 app.post("/subfinder-scan", (req, res) => {
@@ -166,7 +186,20 @@ app.post("/auto-scan", (req, res) => {
 
 app.post("/nuclei-scan", (req, res) => {
   const target = req.body.domain
+  const output = req.body.output
   runScan("./scripts/nuclei_scan_target.sh", target, `./results/${target}_nuclei_result.log`, res)
+})
+
+app.get("/check-ip", (req, res) => {
+  // runScan("./scripts/nuclei_scan_target.sh", target, `./results/${target}_nuclei_result.log`, res)
+  checkIP(res)
+})
+
+app.post("/save-to-file", upload.single("result"), (req, res) => {
+  const data = req.body
+  const tanggal_waktu = new Date().toISOString().slice(0, 19).replace(/:/g, "_")
+  res.send
+
 })
 
 // Form submission route
@@ -178,6 +211,8 @@ app.post("/submit", upload.single("evidence"), (req, res) => {
   // Convert the request body to a string
   const generate_report = JSON.stringify(req.body)
   const tanggal_waktu = new Date().toISOString().slice(0, 19).replace(/:/g, "_")
+
+  const file = JSON.stringify(req.body)
 
   // Write the data to a .txt file
   fs.writeFile(`./uploads/insiden ${data.title}-${tanggal_waktu}.json`, generate_report, (err) => {

@@ -1,0 +1,16 @@
+interface Props {
+    en: string
+    id: string
+    tag?: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "span" | "div"
+    class?: string
+    showToggle?: boolean
+    defaultLang?: "en" | "id"
+  }
+  
+  const { en, id: indonesian, tag: Tag = "p", class: className = "", showToggle = true, defaultLang = "en" } = Astro.props
+  
+  const uniqueId = `ml-${Math.random().toString(36).substring(2, 9)}`
+  const initialText = defaultLang === "en" ? en : indonesian
+  const buttonText = defaultLang === "en" ? "🇮🇩 Bahasa Indonesia" : "🇺🇸 English"
+  const otherLang = defaultLang === "en" ? "id" : "en"
+  

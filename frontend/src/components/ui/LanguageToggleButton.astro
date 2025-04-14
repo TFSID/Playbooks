@@ -1,0 +1,51 @@
+---
+interface Props {
+    englishText: string
+    indonesianText: string
+    id?: string
+    class?: string
+}
+
+const {
+    englishText,
+    indonesianText,
+    id = `lang-toggle-${Math.random().toString(36).substring(2, 9)}`,
+    class: className,
+} = Astro.props as Props
+
+
+function toggleClass(id: string) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.toggle('new-style');
+  }
+}
+---
+
+<button onclick={`changeLang('${id}', '${indonesianText}', '${englishText}')`}>Change Lang</button>
+<!-- <button onclick={`changeLang('${id}', '${indonesianText}', '${englishText}')`}>Change Lang</button> -->
+
+<!-- <button onclick="changeLang({id}, {indonesianText}, {englishText})">change Lang 2</button> -->
+
+<div id={id} class="lang-en">
+    <p>{englishText}</p>
+</div>
+
+<script is:inline>
+    function changeLang(id, indonesianText, englishText) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const isEnglish = el.classList.contains('lang-en');
+
+        if (isEnglish)  {
+            el.innerHTML= '<p>'+indonesianText+'</p>'
+            el.classList.remove('lang-en')
+            el.classList.add('lang-id');
+        }
+        else {
+            el.innerHTML= '<p>'+englishText+'</p>'
+            el.classList.remove('lang-id');
+            el.classList.add('lang-en');
+        }
+    }
+</script>
