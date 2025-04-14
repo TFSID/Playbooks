@@ -8,20 +8,32 @@ import { dirname } from "path"
 import fs from "fs"
 import { exec } from "child_process" // Added missing import
 import { createRequire } from "module"
+// import "swagger-ui-express"
+
+
+
 import { Http2ServerRequest } from "http2"
 import { error } from "console"
 
 // Configure environment variables
 dotenv.config()
 
+
 // Set up __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const require = createRequire(import.meta.url)
 
+// Swagger libs
+
+// const swaggerUi = require('swagger-ui-express')
+// const swaggerSpec = require('./swagger.js')
+
+
 // Initialize Express app
 const app = express()
 const http = require('http');
+const port = 5000
 
 // CORS configuration - properly configured middleware
 const corsOptions = {
@@ -243,6 +255,13 @@ app.post("/upload", (req, res) => {
     res.send("Image uploaded successfully")
   })
 })
+
+
+// Swagger routes
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get('/api/hello', (req, res) => {
+  res.json({ message: 'Hello Swagger!' });
+});
 
 // Start the server
 app.listen(5000, () => console.log("Server running at port 5000"))
