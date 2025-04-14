@@ -112,13 +112,23 @@ function checkIP(res) {
   exec(command, (error, stdout, stderr) => {
     if (error) {
       console.error(`Error: ${error.message}`)
-      return res.status(500).send(err.message)
+      return res.status(500).send(error.message)
     }
     if (stderr) {
       console.error(`Stderr: ${stderr}`)
     }
     console.log(`Stdout: ${stdout}`)
-    res.send(`Your Backend IP Is: ${stdout}, stderr: ${stderr}`);
+    // let result = `Your Backend IP Is: ${stdout}\n`
+    let result = `{"backend_ip": "${stdout}"}`
+    // result += `stderr: ${stderr}`
+    // res.send(`${result}`);
+    res.json({
+      message: `Your Backend IP Is: ${stdout}`,
+      success: true,
+      data: {
+        ip: `"${stdout}"`
+      }
+    })
   })
 }
 
@@ -191,7 +201,6 @@ app.post("/nuclei-scan", (req, res) => {
 })
 
 app.get("/check-ip", (req, res) => {
-  // runScan("./scripts/nuclei_scan_target.sh", target, `./results/${target}_nuclei_result.log`, res)
   checkIP(res)
 })
 
