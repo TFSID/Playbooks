@@ -17,6 +17,7 @@ Pre-requirements for running this projects:
 NOTE:
    - Dockerized Frontend: localhost:3000
    - Dockerized Backend: localhost:5000
+   - Dockerized Backend-Api-Documentations: localhost:5001/api-docs
 
 To get started:
 

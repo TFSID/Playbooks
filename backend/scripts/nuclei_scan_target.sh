@@ -24,5 +24,5 @@ fi
 # nuclei -u "$DOMAIN"  -t /home/tfs/nuclei-templates -fr -o "$OUTPUT" -j "$JSONL_OUTPUT" -severity info,low,medium,high,critical -bulk-size 2 -c 3 -rate-limit 100 -retries 3 -timeout 120
 echo "scanning $DOMAIN"
 
-nuclei -u "$DOMAIN"  -t /home/tfs/nuclei-templates -fr -o "$OUTPUT" -severity info,low,medium,high,critical -bulk-size 2 -c 3 -rate-limit 100 -retries 3 -timeout 120
+nuclei -u "$DOMAIN"  -t /root/nuclei-templates -fr -o "$OUTPUT" -severity info,low,medium,high,critical -bulk-size 2 -c 3 -rate-limit 100 -retries 3 -timeout 120
 

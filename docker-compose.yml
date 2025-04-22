@@ -1,23 +1,36 @@
 services:
+  swagger:
+    build:
+      context: ./backend
+      dockerfile: swagger.Dockerfile
+    container_name: pentest-container-api-docs
+    ports: 
+      - "5001:5000"
+    # volumes:
+      # - ./backend:/app
+    # working_dir: /app
+
   backend:
     build:
-      context: backend/
+      context: ./backend
       dockerfile: Dockerfile
     container_name: pentest_container
     ports: 
-      - 5000:5000
+      - "5000:5000"
     volumes:
-      - ./backend:/app
-    working_dir: /app
+      - ./backend/logs:/app/logs
+      - ./scripts:/app/scripts
+    # working_dir: /app
+
   frontend:
     build:
-      context: frontend/
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: SecOps-Frontend
     ports:
-      - 3000:4321
+      - "4321:4321"
       # for development purpose only
-      - 3001:4322
+      - "3001:4322"
     volumes:
       - ./frontend:/app
     working_dir: /app

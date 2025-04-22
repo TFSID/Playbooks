@@ -2,7 +2,7 @@
 
 # Constants for default directory and download links
 DEFAULT_DIR=/opt
-LOCAL_BIN_DIR=/usr/local/bin
+LOCAL_BIN_DIR=/usr/bin
 
 # Tool specifics
 SUBFINDER_ZIP="subfinder_2.6.7_linux_amd64.zip"
@@ -188,10 +188,10 @@ add_to_path() {
     fi
 }
 
-if $INSTALL_NMAP; then
-    # install_tool "Nmap" "$DOWNLOAD_NMAP" "nmap.zip" "/opt/tmp/nmap_dir" "$DEFAULT_DIR/tmp/nmap" "/opt/tmp/nmap_dir/nmap"
-    install_tool "Nmap" "$DOWNLOAD_NMAP" "nmap.zip" "$NMAP_DIR" "$LOCAL_BIN_DIR/$NMAP_BINARY_NAME" "$NMAP_BINARY"
-fi
+# if $INSTALL_NMAP; then
+#     # install_tool "Nmap" "$DOWNLOAD_NMAP" "nmap.zip" "/opt/tmp/nmap_dir" "$DEFAULT_DIR/tmp/nmap" "/opt/tmp/nmap_dir/nmap"
+#     install_tool "Nmap" "$DOWNLOAD_NMAP" "nmap.zip" "$NMAP_DIR" "$LOCAL_BIN_DIR/$NMAP_BINARY_NAME" "$NMAP_BINARY"
+# fi
 
 if $INSTALL_SUBFINDER; then
     # install_tool "Subfinder" "$DOWNLOAD_SUBFINDER" "$SUBFINDER_ZIP" "/opt/tmp/subfinder_dir" "$DEFAULT_DIR/tmp/subfinder" "/opt/tmp/subfinder_dir/subfinder"
@@ -210,6 +210,7 @@ fi
 
 if $INSTALL_NUCLEI; then
     # install_tool "Nuclei" "$DOWNLOAD_NUCLEI" "$NUCLEI_ZIP" "/opt/tmp/nuclei_dir" "$DEFAULT_DIR/tmp/nuclei" "/opt/tmp/nuclei_dir/nuclei"
+    # extract_and_install_tar_xz "nuclei" "$DOWNLOAD_NUCLEI" "$PROXYCHAINS_TAR" "$DEFAULT_DIR/proxychains"
     install_tool "Nuclei" "$DOWNLOAD_NUCLEI" "$NUCLEI_ZIP" "$NUCLEI_DIR" "$LOCAL_BIN_DIR/$NUCLEI_BINARY_NAME" "$NUCLEI_BINARY"
     # echo "[INFO] Adding Nuclei to PATH..."
     # if ! echo "$PATH" | grep -q "/opt/tmp/nuclei_dir"; then
@@ -225,14 +226,16 @@ fi
 #     install_tool "Nuclei" "$DOWNLOAD_PROXYCHAINS" "$PROXYCHAINS_ZIP" "/opt/tmp/proxychains_dir" "$DEFAULT_DIR/tmp/proxychains" "/opt/tmp/proxychains_dir/"
 # fi
 
-if $INSTALL_PROXYCHAINS; then
-    extract_and_install_tar_xz "Proxychains" "$DOWNLOAD_PROXYCHAINS" "$PROXYCHAINS_TAR" "$DEFAULT_DIR/proxychains"
-    cd "$DEFAULT_DIR/proxychains" || exit 1
-    ./configure
-    make && make install
-    check_success "Installing Proxychains"
-    echo "[INFO] Proxychains installed successfully."
-fi
+## Failure Writing Output To Destinations
+
+# if $INSTALL_PROXYCHAINS; then
+#     extract_and_install_tar_xz "Proxychains" "$DOWNLOAD_PROXYCHAINS" "$PROXYCHAINS_TAR" "$DEFAULT_DIR/proxychains"
+#     cd "$DEFAULT_DIR/proxychains" || exit 1
+#     ./configure
+#     make && make install
+#     check_success "Installing Proxychains"
+#     echo "[INFO] Proxychains installed successfully."
+# fi
 
 if $INSTALL_URLFINDER; then
     echo "[INFO] Downloading URLFinder..."

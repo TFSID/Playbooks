@@ -34,10 +34,12 @@ const require = createRequire(import.meta.url)
 const app = express()
 const http = require('http');
 const port = 5000
+const host = '0.0.0.0'
 
 // CORS configuration - properly configured middleware
 const corsOptions = {
-  origin: ["http://localhost:4321", "https://127.0.0.1", "https://127.0.0.1:4321"], // Allow multiple origins
+  origin: ["http://localhost:4321", "http://127.0.0.1", "http://127.0.0.1:4321"], // Allow multiple origins
+  // origin: ["*"], // Allow All origins
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
   credentials: true, // Allow cookies
@@ -98,7 +100,7 @@ function displayScanResult(file) {
 
 // Function to run bash scripts
 function runScan(scriptPath, target, resultFile, res) {
-  const command = `bash ${scriptPath} "${target}" "${resultFile}"`
+  const command = `bash ${scriptPath} "${target}" "${resultFile}" > ./logs/scan_activity.log 2>&1`
   exec(command, (error, stdout, stderr) => {
     if (error) {
       console.error(`Error: ${error.message}`)
@@ -257,12 +259,6 @@ app.post("/upload", (req, res) => {
 })
 
 
-// Swagger routes
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello Swagger!' });
-});
-
 // Start the server
-app.listen(5000, () => console.log("Server running at port 5000"))
+app.listen(port,host, () => console.log(`Server running at port ${port} in ${host}`))
 

@@ -1,7 +1,6 @@
-FROM node:lts-slim
+FROM node:20-slim
 
 # Install system dependencies
-# nodejs \
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -34,21 +33,21 @@ WORKDIR /app
 # Copy Application
 COPY . /app
 
-RUN bash scripts/weapon_installer.sh --all
+# RUN bash scripts/weapon_installer.sh
 
 # Optionally install Python dependencies
-COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt || true
+# COPY requirements.txt requirements.txt
+# RUN pip install --no-cache-dir -r requirements.txt || true
 
 # Make dirsearch available globally
 # ENV PATH="/opt/dirsearch:$PATH"
 
 # Expose a default port
-EXPOSE 5000
+EXPOSE 8990
 
 # Default command to run a shell
 # CMD ["/bin/bash"]
 
 RUN npm install
 
-CMD node index.js
+CMD node index-swagger.js

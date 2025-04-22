@@ -36,6 +36,7 @@ const swaggerDocument = JSON.parse(await fs.readFile('./routes/api.json', 'utf-8
 const app = express();
 const router = express.Router();
 const port = 5000;
+const host = '0.0.0.0'
 
 const middlewareObj = {
     'middleware-name1': JSON.parse(await fs.readFile('./routes/api.json', 'utf-8'))
@@ -57,7 +58,6 @@ app.get('/api/hello', (req, res) => {
 
 // swaggerUi.setUpRoutes(middlewareObj, app, swaggerDocument, useBasePath);
 
-
 const specs = swaggerSpec;
 app.use(
   "/api-docs",
@@ -65,7 +65,7 @@ app.use(
   swaggerUi.setup(swaggerDocument)
 );
 
-app.listen(port, () => {
+app.listen(port, host, () => {
   console.log(`Server running on http://localhost:${port}`);
   console.log(`Swagger docs at http://localhost:${port}/api-docs`);
 });
