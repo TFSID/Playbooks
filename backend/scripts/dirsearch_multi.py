@@ -4,8 +4,8 @@ import os
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 
-output_dir = "dirsearch-result"
-os.makedirs(output_dir, exist_ok=True)
+# output_dir = "./results/dirsearch-result"
+# os.makedirs(output_dir, exist_ok=True)
 
 def sanitize_name(target):
     return re.sub(r'[^a-zA-Z0-9]', '_', target)
@@ -44,9 +44,10 @@ def run_dirsearch(target, output_file):
         print(f"Dirsearch error: {str(e)}")
         return -1
 
-def endpoint_enum(target):
+def endpoint_enum(target, output):
     sanitized = sanitize_name(target)
-    output_file = f"{output_dir}/EndpointList-{sanitized}-dirsearch_results.txt"
+    # output_file = f"{output_dir}/EndpointList-{sanitized}-dirsearch_results.txt"
+    output_file = f"{sanitized}-{output}"
     
     # Thread-controlled execution
     with ThreadPoolExecutor(max_workers=1) as executor:
@@ -57,8 +58,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description=' Dirsearch MultiThreads')
     
     # Positional Arguments
-    parser.add_argument('--t', help='target/url to be scan')
+    parser.add_argument('--target', help='target/url to be scan')
     parser.add_argument('--list', help='target/url list to be scanned')
+    parser.add_argument('--output', help='output file for dirsearch results')
     
     args = parser.parse_args()
     return args
@@ -66,6 +68,8 @@ def parse_args():
 # Example usage
 if __name__ == "__main__":
     args = parse_args()
+    # output = args.output if args.output else "dirsearch-result"
+    output = args.output
     if args.list:
         try:
             with open(args.list, 'r') as f:
@@ -73,11 +77,11 @@ if __name__ == "__main__":
                 print(f'Multi Scannings: {args.list}')
                 for target in targets:
                     print(f'Scanning: {target}')
-                    endpoint_enum(target)
+                    endpoint_enum(target, output)
             print(f'List')
         except Exception as e:
             print(f'{e}')
     else:
         target_url = args.target
         print(f'Single Scanning Target= {args.target}')
-        endpoint_enum(target_url)
+        endpoint_enum(target_url, output)

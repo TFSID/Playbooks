@@ -6,7 +6,7 @@ import path from "path"
 import { fileURLToPath } from "url"
 import { dirname } from "path"
 import fs from "fs"
-import { exec } from "child_process" // Added missing import
+import { exec, spawn } from "child_process" // Added missing import
 import { createRequire } from "module"
 // import "swagger-ui-express"
 
@@ -100,7 +100,83 @@ function displayScanResult(file) {
 
 // Function to run bash scripts
 function runScan(scriptPath, target, resultFile, res) {
-  const command = `bash ${scriptPath} "${target}" "${resultFile}" > ./logs/scan_activity.log 2>&1`
+  const command = `bash ${scriptPath} "${target}" "${resultFile}" >> ./logs/bash_scan_activity.log 2>&1`
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error: ${error.message}`)
+      return res.status(500).send(error.message)
+    }
+    if (stderr) {
+      console.error(`Stderr: ${stderr}`)
+    }
+    console.log(`Stdout: ${stdout}`)
+    // res.send("")
+    // Send file for download
+    res.download(path.join(__dirname, resultFile), (err) => {
+      if (err) {
+        console.error("Error sending file: ", err)
+      }
+    res.send(`Result - stdout: ${stdout}, stderr: ${stderr}`);
+    })
+  })
+}
+
+function runPyProcess(scriptPath, target, resultFile, res) {
+  const command = `python3 ${scriptPath} --target "${target}" --output "${resultFile}" >> ./logs/scan_activity.log 2>&1`
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error: ${error.message}`)
+      return res.status(500).send(error.message)
+    }
+    if (stderr) {
+      console.error(`Stderr: ${stderr}`)
+    }
+    console.log(`Stdout: ${stdout}`)
+    // res.send("")
+    // Send file for download
+    res.download(path.join(__dirname, resultFile), (err) => {
+      if (err) {
+        console.error("Error sending file: ", err)
+      }
+    res.send(`Result - stdout: ${stdout}, stderr: ${stderr}`);
+    })
+  })
+}
+
+function spawnDirSearchProccess(scriptPath, target, resultFile, res) {
+  const outLog = fs.createWriteStream("./logs/dirsearch_scan_activity.log", { flags: "a" })
+
+  const process = spawn("python3", [scriptPath, "--target", target, "--output", resultFile]);
+
+  process.stdout.pipe(outLog);
+  process.stderr.pipe(outLog);
+
+  let stdout = "";
+  process.stdout.on("data", (data) => {
+    stdout += data.toString();
+  });
+  process.stderr.on("data", (data) => {
+    console.error(`Stderr: ${data}`);
+  });
+  process.on("close", (code) => {
+    if (code !== 0) {
+      console.error(`Process exited with code ${code}`);
+      return res.status(500).send(`Process exited with code ${code}`);
+    }
+    console.log(`Process completed successfully. Stdout: ${stdout}`);
+    // Send file for download
+    res.download(path.join(__dirname, resultFile), (err) => {
+      if (err) {
+        console.error("Error sending file: ", err)
+      }
+      res.send(`Result - stdout: ${stdout}`);
+    })
+  });
+}
+
+
+function runDirSearchProccess(scriptPath, target, resultFile, res) {
+  const command = `python3 ${scriptPath} --target "${target}" --output "${resultFile}" >> ./logs/dirsearch_scan_activity.log 2>&1`
   exec(command, (error, stdout, stderr) => {
     if (error) {
       console.error(`Error: ${error.message}`)
@@ -200,7 +276,8 @@ app.post("/rce", (req, res) => {
 
 app.post("/dirsearch-scan", (req, res) => {
   const target = req.body.domain
-  runScan("./scripts/dirsearch-scan.sh", target, "./results/dirsearch_result.txt", res)
+  // runScan("./scripts/dirsearch-scan.sh", target, "./results/dirsearch_result.txt", res)
+  runDirSearchProccess("./scripts/dirsearch_multi.py", target, `./results/${target}_dirsearch_result.txt`, res)
 })
 
 app.post("/auto-scan", (req, res) => {
