@@ -3,6 +3,10 @@ FROM node:lts-slim
 # Install system dependencies
 # nodejs \
 RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-dev \
+    python3-venv \
+    python3-pip \
     git \
     curl \
     wget \
@@ -25,20 +29,31 @@ RUN apt-get update && apt-get install -y \
 
 # Install dirsearch
 # RUN git clone https://github.com/maurosoria/dirsearch.git /opt/dirsearch
-# RUN git clone https://github.com/maurosoria/dirsearch.git --depth 1
 
+RUN git clone https://github.com/maurosoria/dirsearch.git --depth 1 \
+    && cd dirsearch \
+    && python3 setup.py install
 
 # Set up working directory
 WORKDIR /app
+
 
 # Copy Application
 COPY . /app
 
 RUN bash scripts/weapon_installer.sh --all
 
+# RUN pip install --no-cache-dir virtualenv
+# Create and activate a virtual environment
+# RUN virtualenv /app/.venv
+# ENV PATH="/app/.venv/bin:$PATH"
+# RUN pip install dirsearch
+
 # Optionally install Python dependencies
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt || true
+
+#  Dirsearch Extension
 
 # Make dirsearch available globally
 # ENV PATH="/opt/dirsearch:$PATH"
@@ -52,3 +67,4 @@ EXPOSE 5000
 RUN npm install
 
 CMD node index.js
+# CMD ["/bin/bash", "/app/run_venv.sh"]

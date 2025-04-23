@@ -85,10 +85,10 @@ import CustomBtn from "../components/ui/CustomBtn.astro"
               <h5 class="card-title">Dirsearch Scanner</h5>
               <p class="card-text">Finding Directories/API From Endpoints.</p>
               <br>
-              <ScannerButton scannerType="dirsearch" />
+              <!-- <ScannerButton scannerType="dirsearch" /> -->
               <ExternalScannerButton 
                 scannerType="vulnerability" 
-                externalUrl="https://127.0.0.1:5000/dirsearch-scan" 
+                externalUrl="http://127.0.0.1:5000/dirsearch-scan" 
                 label="Run External Scan" 
               />
             </div>
@@ -104,7 +104,7 @@ import CustomBtn from "../components/ui/CustomBtn.astro"
               <ScannerButton scannerType="autoscan" />
               <ExternalScannerButton 
                 scannerType="vulnerability" 
-                externalUrl="https://127.0.0.1:5000/auto-scan" 
+                externalUrl="http://127.0.0.1:5000/auto-scan" 
                 label="Run External Scan" 
               />
             </div>
@@ -118,10 +118,9 @@ import CustomBtn from "../components/ui/CustomBtn.astro"
               <p class="card-text">
                 Finds Active Subdomains with subfinder and HTTPX combinations.
               </p>
-              <ScannerButton scannerType="subdomain" />
               <ExternalScannerButton 
                 scannerType="vulnerability" 
-                externalUrl="https://127.0.0.1:5000/subdomain-scan" 
+                externalUrl="http://127.0.0.1:5000/subdomain-scan" 
                 label="Run External Scan" 
               />
             </div>
@@ -138,7 +137,7 @@ import CustomBtn from "../components/ui/CustomBtn.astro"
               <ScannerButton scannerType="ip" />
               <ExternalScannerButton 
                 scannerType="vulnerability" 
-                externalUrl="https://127.0.0.1:5000/ip-scan" 
+                externalUrl="http://127.0.0.1:5000/ip-scan" 
                 label="Run External Scan" 
               />
             </div>

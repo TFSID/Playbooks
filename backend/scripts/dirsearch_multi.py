@@ -20,7 +20,6 @@ def run_dirsearch(target, output_file):
         "--recursion-status", "200-302,500,403",
         "-x", "400-600",
         "-t", "50",
-        "--format=plain",
         "-o", output_file
     ]
     
@@ -47,7 +46,7 @@ def run_dirsearch(target, output_file):
 def endpoint_enum(target, output):
     sanitized = sanitize_name(target)
     # output_file = f"{output_dir}/EndpointList-{sanitized}-dirsearch_results.txt"
-    output_file = f"{sanitized}-{output}"
+    output_file = f"results-{output}"
     
     # Thread-controlled execution
     with ThreadPoolExecutor(max_workers=1) as executor:

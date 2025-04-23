@@ -19,7 +19,8 @@ services:
       - "5000:5000"
     volumes:
       - ./backend/logs:/app/logs
-      - ./scripts:/app/scripts
+      - ./backend/results:/app/results
+      - ./backend/scripts:/app/scripts
     # working_dir: /app
 
   frontend:

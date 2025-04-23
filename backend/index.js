@@ -6,9 +6,11 @@ import path from "path"
 import { fileURLToPath } from "url"
 import { dirname } from "path"
 import fs from "fs"
-import { exec, spawn } from "child_process" // Added missing import
+// import { exec, spawn } from "child_process" // Added missing import
 import { createRequire } from "module"
 // import "swagger-ui-express"
+import { checkIP, runScan, spawnDirSearchProccess } from "./utils/subproc.js"
+import { generateReport } from "./utils/playbooks.js"
 
 
 
@@ -17,7 +19,6 @@ import { error } from "console"
 
 // Configure environment variables
 dotenv.config()
-
 
 // Set up __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url)
@@ -28,7 +29,6 @@ const require = createRequire(import.meta.url)
 
 // const swaggerUi = require('swagger-ui-express')
 // const swaggerSpec = require('./swagger.js')
-
 
 // Initialize Express app
 const app = express()
@@ -68,159 +68,13 @@ const upload = multer({ storage: storage })
 // Serve static files
 app.use("/uploads", express.static("uploads"))
 
-// Report generation function
-function generateReport(data) {
-  let report = `Jenis Serangan: ${data.attack_type}\n`
-  report += `Tags: ${data.tags}\n`
-  report += `Severity: ${data.severity}\n`
-  report += `Description: ${data.description}\n`
-  report += `Action: ${data.action}\n`
-  report += `Recommendations: ${data.recommendations}\n`
-  report += `Details: ${data.details}\n`
-  report += `\n\n\n`
-  report += `Markdowns Preview\n\n`
-  report += `# ${data.title}\n\n`
-  report += `**Jenis Serangan**: ${data.attack_type}\n\n`
-  report += `**Tags**: ${data.tags}\n\n`
-  report += `**Severity**: ${data.severity}\n\n`
-  report += `**Description**: ${data.description}\n\n`
-  report += `**Action**: ${data.action}\n\n`
-  report += `**Recommendations**: ${data.recommendations}\n\n`
-  report += `**uuid**: ${data.uuid}\n\n`
-  report += `**Search Query**: \`\`\` ${data.query} \`\`\`\n\n`
-  report += `# Future Details\n`
-  report += `\`\`\` ${data.details}\`\`\`\n`
-  return report
-}
+
 
 function displayScanResult(file) {
   return file
 }
 
-
 // Function to run bash scripts
-function runScan(scriptPath, target, resultFile, res) {
-  const command = `bash ${scriptPath} "${target}" "${resultFile}" >> ./logs/bash_scan_activity.log 2>&1`
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error: ${error.message}`)
-      return res.status(500).send(error.message)
-    }
-    if (stderr) {
-      console.error(`Stderr: ${stderr}`)
-    }
-    console.log(`Stdout: ${stdout}`)
-    // res.send("")
-    // Send file for download
-    res.download(path.join(__dirname, resultFile), (err) => {
-      if (err) {
-        console.error("Error sending file: ", err)
-      }
-    res.send(`Result - stdout: ${stdout}, stderr: ${stderr}`);
-    })
-  })
-}
-
-function runPyProcess(scriptPath, target, resultFile, res) {
-  const command = `python3 ${scriptPath} --target "${target}" --output "${resultFile}" >> ./logs/scan_activity.log 2>&1`
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error: ${error.message}`)
-      return res.status(500).send(error.message)
-    }
-    if (stderr) {
-      console.error(`Stderr: ${stderr}`)
-    }
-    console.log(`Stdout: ${stdout}`)
-    // res.send("")
-    // Send file for download
-    res.download(path.join(__dirname, resultFile), (err) => {
-      if (err) {
-        console.error("Error sending file: ", err)
-      }
-    res.send(`Result - stdout: ${stdout}, stderr: ${stderr}`);
-    })
-  })
-}
-
-function spawnDirSearchProccess(scriptPath, target, resultFile, res) {
-  const outLog = fs.createWriteStream("./logs/dirsearch_scan_activity.log", { flags: "a" })
-
-  const process = spawn("python3", [scriptPath, "--target", target, "--output", resultFile]);
-
-  process.stdout.pipe(outLog);
-  process.stderr.pipe(outLog);
-
-  let stdout = "";
-  process.stdout.on("data", (data) => {
-    stdout += data.toString();
-  });
-  process.stderr.on("data", (data) => {
-    console.error(`Stderr: ${data}`);
-  });
-  process.on("close", (code) => {
-    if (code !== 0) {
-      console.error(`Process exited with code ${code}`);
-      return res.status(500).send(`Process exited with code ${code}`);
-    }
-    console.log(`Process completed successfully. Stdout: ${stdout}`);
-    // Send file for download
-    res.download(path.join(__dirname, resultFile), (err) => {
-      if (err) {
-        console.error("Error sending file: ", err)
-      }
-      res.send(`Result - stdout: ${stdout}`);
-    })
-  });
-}
-
-
-function runDirSearchProccess(scriptPath, target, resultFile, res) {
-  const command = `python3 ${scriptPath} --target "${target}" --output "${resultFile}" >> ./logs/dirsearch_scan_activity.log 2>&1`
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error: ${error.message}`)
-      return res.status(500).send(error.message)
-    }
-    if (stderr) {
-      console.error(`Stderr: ${stderr}`)
-    }
-    console.log(`Stdout: ${stdout}`)
-    // res.send("")
-    // Send file for download
-    res.download(path.join(__dirname, resultFile), (err) => {
-      if (err) {
-        console.error("Error sending file: ", err)
-      }
-    res.send(`Result - stdout: ${stdout}, stderr: ${stderr}`);
-    })
-  })
-}
-
-function checkIP(res) {
-  const command = `curl ifconfig.me`
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error: ${error.message}`)
-      return res.status(500).send(error.message)
-    }
-    if (stderr) {
-      console.error(`Stderr: ${stderr}`)
-    }
-    console.log(`Stdout: ${stdout}`)
-    // let result = `Your Backend IP Is: ${stdout}\n`
-    let result = `{"backend_ip": "${stdout}"}`
-    // result += `stderr: ${stderr}`
-    // res.send(`${result}`);
-    res.json({
-      message: `Your Backend IP Is: ${stdout}`,
-      success: true,
-      data: {
-        ip: `"${stdout}"`
-      }
-    })
-  })
-}
 
 // Routes
 // app.get("/", (req, res) => {
@@ -248,9 +102,9 @@ app.get("/", (req, res) => {
 // })
 
 // Scanner routes
-app.post("/subfinder-scan", (req, res) => {
+app.post("/subdomain-scan", (req, res) => {
   const target = req.body.domain
-  runScan("./scripts/subfinder-scan.sh", target, "./results/subfinder_result.txt", res)
+  runScan("./scripts/subfinder_httpx.sh", target, `./results/${target}_subfinder_result.txt`, res)
 })
 
 app.post("/get-ip-from-domain", (req, res) => {
@@ -258,26 +112,11 @@ app.post("/get-ip-from-domain", (req, res) => {
   runScan("./scripts/get-ip-from-domain.sh", target, "./results/getip_result.txt", res)
 })
 
-app.post("/rce", (req, res) => {
-  let command = 'pwd'
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error: ${error.message}`)
-      return res.status(500).send(error.message)
-    }
-    if (stderr) {
-      console.error(`Stderr: ${stderr}`)
-    }
-    console.log(`Stdout: ${stdout}`)
-    // Send file for download
-    res.send(`<script>alert('Stdout: ${stdout}');</script>`);
-  })
-})
 
 app.post("/dirsearch-scan", (req, res) => {
   const target = req.body.domain
   // runScan("./scripts/dirsearch-scan.sh", target, "./results/dirsearch_result.txt", res)
-  runDirSearchProccess("./scripts/dirsearch_multi.py", target, `./results/${target}_dirsearch_result.txt`, res)
+  spawnDirSearchProccess("./scripts/dirsearch_multi.py", target, `./results/${target}_dirsearch_result.txt`, res)
 })
 
 app.post("/auto-scan", (req, res) => {
@@ -299,7 +138,23 @@ app.post("/save-to-file", upload.single("result"), (req, res) => {
   const data = req.body
   const tanggal_waktu = new Date().toISOString().slice(0, 19).replace(/:/g, "_")
   res.send
+})
 
+
+app.post("/rce", (req, res) => {
+  let command = 'pwd'
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error: ${error.message}`)
+      return res.status(500).send(error.message)
+    }
+    if (stderr) {
+      console.error(`Stderr: ${stderr}`)
+    }
+    console.log(`Stdout: ${stdout}`)
+    // Send file for download
+    res.send(`<script>alert('Stdout: ${stdout}');</script>`);
+  })
 })
 
 // Form submission route

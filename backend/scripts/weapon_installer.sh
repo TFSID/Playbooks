@@ -35,6 +35,14 @@ NUCLEI_BINARY_NAME="nuclei"
 NUCLEI_DIR="$DEFAULT_DIR/nuclei"
 NUCLEI_BINARY="$NUCLEI_DIR/$NUCLEI_BINARY_NAME"
 
+
+# Install Dirsearch
+DIRSEARCH_ZIP="dirsearch-0.4.3.zip"
+DOWNLOAD_DIRSEARCH="https://github.com/maurosoria/dirsearch/releases/tag/v0.4.3/$DIRSEARCH_ZIP"
+DIRSEARCH_BINARY_NAME="dirsearch"
+DIRSEARCH_DIR="$DEFAULT_DIR/dirsearch"
+DIRSEARCH_BINARY="$DIRSEARCH_DIR/$DIRSEARCH_BINARY_NAME"
+
 PROXYCHAINS_ZIP="proxychains-ng-4.17.tar.xz"
 DOWNLOAD_PROXYCHAINS="https://github.com/rofl0r/proxychains-ng/releases/download/v4.17/$PROXYCHAINS_ZIP"
 PROXYCHAINS_BINARY_NAME="proxychains"
@@ -146,12 +154,16 @@ while [ "$#" -gt 0 ]; do
         --urlfinder)
             INSTALL_URLFINDER=true
             ;;
+        --dirsearch)
+            INSTALL_DIRSEARCH=true
+            ;;
         --all)
             INSTALL_SUBFINDER=true
             INSTALL_KATANA=true
             INSTALL_NMAP=true
             INSTALL_HTTPX=true
             INSTALL_NUCLEI=true
+            # INSTALL_DIRSEARCH=true
             INSTALL_URLFINDER=true
             INSTALL_PROXYCHAINS=true
             ;;
@@ -206,6 +218,12 @@ fi
 if $INSTALL_HTTPX; then
     # install_tool "HTTPX" "$DOWNLOAD_HTTPX" "$HTTPX_ZIP" "/opt/tmp/httpx_dir" "$DEFAULT_DIR/tmp/httpx" "/opt/tmp/httpx_dir/httpx"
     install_tool "HTTPX" "$DOWNLOAD_HTTPX" "$HTTPX_ZIP" "$HTTPX_DIR" "$LOCAL_BIN_DIR/$HTTPX_BINARY_NAME" "$HTTPX_BINARY"
+fi
+
+if $INSTALL_DIRSEARCH; then
+    git clone https://github.com/maurosoria/dirsearch.git --depth 1
+    # install_tool "HTTPX" "$DOWNLOAD_HTTPX" "$HTTPX_ZIP" "/opt/tmp/httpx_dir" "$DEFAULT_DIR/tmp/httpx" "/opt/tmp/httpx_dir/httpx"
+    # install_tool "dirsearch" "$DOWNLOAD_DIRSEARCH" "$DIRSEARCH_ZIP" "$DIRSEARCH_DIR" "$LOCAL_BIN_DIR/$DIRSEARCH_BINARY_NAME" "$DIRSEARCH_BINARY"
 fi
 
 if $INSTALL_NUCLEI; then
