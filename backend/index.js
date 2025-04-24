@@ -12,8 +12,6 @@ import { createRequire } from "module"
 import { checkIP, runScan, spawnDirSearchProccess } from "./utils/subproc.js"
 import { generateReport } from "./utils/playbooks.js"
 
-
-
 import { Http2ServerRequest } from "http2"
 import { error } from "console"
 
@@ -159,7 +157,7 @@ app.post("/rce", (req, res) => {
 
 // Form submission route
 app.post("/submit", upload.single("evidence"), (req, res) => {
-  const data = req.body.domain
+  const data = req.body
   const report = generateReport(data)
   res.send(`<pre>${report}</pre>` + `<img src="/uploads/${req.file.filename}" />`)
 
