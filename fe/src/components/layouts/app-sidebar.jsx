@@ -55,7 +55,6 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    active={pathname === item.url}
                     className="group hover:neon-glow-sm"
                   >
                     <a

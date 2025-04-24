@@ -7,6 +7,7 @@ import FileUploader from "@/components/molecules/FileUploader";
 import LanguageToggleButton from "@/components/LanguageToggleButton";
 import { ArrowRight } from "lucide-react";
 import DefaultBreadcrumb from "@/components/DefaultBreadcumb";
+import { useId } from "react";
 
 const SECTIONS = [
   { id: "section1", label: "Report Data Audit" },
@@ -45,6 +46,7 @@ export default function HomePage() {
       <DefaultBreadcrumb title={"Multi-Step Form"} />
       <div className="container mx-auto pb-8">
         <LanguageToggleButton
+          id={useId()}
           englishText="This page serves as a centralized platform..."
           indonesianText="Halaman ini berfungsi sebagai platform terpusat..."
           className=" neon-box-glow mb-20 p-6 rounded-lg "
