@@ -11,7 +11,7 @@ import LanguageToggleButton from "../ui/LanguageToggleButton.astro"
   indonesianText="Halaman ini berfungsi sebagai platform terpusat untuk mengelola playbook respons insiden, dirancang untuk membantu Pusat Operasi Keamanan (SOC) dalam meningkatkan dan melaporkan insiden keamanan secara efisien. Dengan menyediakan data yang terstruktur dan jelas, ini memastikan penanganan insiden yang konsisten dan efektif, sejalan dengan praktik terbaik keamanan siber yang telah ditetapkan."
   class="btn"
   ></LanguageToggleButton>
-<form action="/submit" method="post" enctype="multipart/form-data">
+<form action="http://127.0.0.1:5000/submit" method="post" enctype="multipart/form-data">
   <!-- Section 1: Report Data Audit -->
   <FormSection id="section1" title="Report Data Audit" nextSection={1}>
     <div class="row">

@@ -159,7 +159,7 @@ app.post("/rce", (req, res) => {
 
 // Form submission route
 app.post("/submit", upload.single("evidence"), (req, res) => {
-  const data = req.body.domain
+  const data = req.body
   const report = generateReport(data)
   res.send(`<pre>${report}</pre>` + `<img src="/uploads/${req.file.filename}" />`)
 
