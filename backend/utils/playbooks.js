@@ -1,5 +1,5 @@
 // Report generation function
-function generateReport(data) {
+export function generateReport(data) {
   let report = `Jenis Serangan: ${data.attack_type}\n`
   report += `Tags: ${data.tags}\n`
   report += `Severity: ${data.severity}\n`

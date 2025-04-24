@@ -12,8 +12,6 @@ import { createRequire } from "module"
 import { checkIP, runScan, spawnDirSearchProccess } from "./utils/subproc.js"
 import { generateReport } from "./utils/playbooks.js"
 
-
-
 import { Http2ServerRequest } from "http2"
 import { error } from "console"
 
