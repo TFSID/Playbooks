@@ -1,6 +1,6 @@
 import { exec, spawn } from "child_process" // Added missing import
 
-function runScan(scriptPath, target, resultFile, res) {
+export function runScan(scriptPath, target, resultFile, res) {
   const command = `bash ${scriptPath} "${target}" "${resultFile}" >> ./logs/bash_scan_activity.log 2>&1`
   exec(command, (error, stdout, stderr) => {
     if (error) {
@@ -22,7 +22,7 @@ function runScan(scriptPath, target, resultFile, res) {
   })
 }
 
-function spawnDirSearchProccess(scriptPath, target, resultFile, res) {
+export function spawnDirSearchProccess(scriptPath, target, resultFile, res) {
   const outLog = fs.createWriteStream("./logs/dirsearch_scan_activity.log", { flags: "a" })
   const result = fs.createWriteStream(`${resultFile}`, { flags: "a" })
   const process = spawn("python3", [scriptPath, "--target", target, "--output", resultFile]);
@@ -54,7 +54,7 @@ function spawnDirSearchProccess(scriptPath, target, resultFile, res) {
   });
 }
 
-function runDirSearchProccess(scriptPath, target, resultFile, res) {
+export function runDirSearchProccess(scriptPath, target, resultFile, res) {
     const outLog = fs.createWriteStream("./logs/dirsearch_scan_activity.log", { flags: "a" })
     const logFile = "./logs/dirsearch_scan_activity.log"
     const command = `python3 ${scriptPath} --target "${target}" --output "${resultFile}" >> ./logs/dirsearch_scan_activity.log 2>&1`
@@ -84,7 +84,7 @@ function runDirSearchProccess(scriptPath, target, resultFile, res) {
     })
   }
 
-function runPyProcess(scriptPath, target, resultFile, res) {
+export function runPyProcess(scriptPath, target, resultFile, res) {
   const command = `python3 ${scriptPath} --target "${target}" --output "${resultFile}" >> ./logs/scan_activity.log 2>&1`
   exec(command, (error, stdout, stderr) => {
     if (error) {
@@ -106,7 +106,7 @@ function runPyProcess(scriptPath, target, resultFile, res) {
   })
 }
 
-function checkIP(res) {
+export function checkIP(res) {
   const command = `curl ifconfig.me`
   exec(command, (error, stdout, stderr) => {
     if (error) {
