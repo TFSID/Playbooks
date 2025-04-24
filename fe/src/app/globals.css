@@ -1,0 +1,293 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==== Base Layer ==== */
+@layer base {
+  :root {
+    /* Global Theme */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 191 100% 50%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 32% 27%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 32% 27%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 191 100% 50%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 32% 27%;
+    --input: 217 32% 27%;
+    --ring: 191 100% 50%;
+    --radius: 0.5rem;
+
+    /* Neon Sidebar */
+    --sidebar-background: 222 47% 7%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 191 100% 50%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 32% 15%;
+    --sidebar-accent-foreground: 191 100% 50%;
+    --sidebar-border: 217 32% 20%;
+    --sidebar-ring: 191 100% 50%;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 191 100% 50%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 32% 27%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 32% 27%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 191 100% 50%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 32% 27%;
+    --input: 217 32% 27%;
+    --ring: 191 100% 50%;
+    --radius: 0.5rem;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  h1 {
+    @apply neon-heading text-3xl font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply neon-heading-sm text-2xl font-bold tracking-tight;
+  }
+}
+
+/* ==== Utilities ==== */
+@layer utilities {
+  /* Neon Text & Heading */
+  .neon-text {
+    color: hsl(191 100% 50%);
+    text-shadow: 0 0 5px hsl(191 100% 50% / 0.5);
+  }
+
+  .neon-heading {
+    @apply text-primary font-semibold;
+    text-shadow: 0 0 5px hsl(191 100% 50% / 0.7),
+      0 0 10px hsl(191 100% 50% / 0.5), 0 0 15px hsl(191 100% 50% / 0.3);
+  }
+
+  .neon-heading-sm {
+    @apply text-primary font-semibold;
+    text-shadow: 0 0 2px hsl(191 100% 50% / 0.7),
+      0 0 5px hsl(191 100% 50% / 0.5);
+  }
+
+  /* Box Glow */
+  .neon-box-glow {
+    box-shadow: 0 0 5px hsl(191 100% 50% / 0.5),
+      0 0 10px hsl(191 100% 50% / 0.5), 0 0 15px hsl(191 100% 50% / 0.3);
+  }
+
+  .neon-box-glow-sm {
+    box-shadow: 0 0 2px hsl(191 100% 50% / 0.5), 0 0 5px hsl(191 100% 50% / 0.3);
+  }
+
+  /* Sidebar Effects */
+  .neon-sidebar-glow {
+    box-shadow: 0 0 10px hsl(191 100% 50% / 0.3),
+      0 0 20px hsl(191 100% 50% / 0.2), 0 0 30px hsl(191 100% 50% / 0.1);
+  }
+
+  .neon-sidebar-item {
+    @apply transition-all duration-200;
+  }
+
+  .neon-sidebar-item:hover {
+    @apply neon-glow-sm bg-primary/20;
+  }
+
+  .neon-sidebar-item-active {
+    @apply neon-glow bg-primary/30;
+  }
+
+  .neon-sidebar-border {
+    border-image: linear-gradient(to right, hsl(191 100% 50%), transparent) 1;
+  }
+
+  /* Text Glow */
+  .neon-glow {
+    text-shadow: 0 0 5px hsl(191 100% 50% / 0.5),
+      0 0 10px hsl(191 100% 50% / 0.5), 0 0 15px hsl(191 100% 50% / 0.3);
+  }
+
+  .neon-glow-sm {
+    text-shadow: 0 0 2px hsl(191 100% 50% / 0.5),
+      0 0 5px hsl(191 100% 50% / 0.3);
+  }
+
+  /* Input Focus */
+  .neon-input-focus {
+    box-shadow: 0 0 0 2px hsl(191 100% 50% / 0.5),
+      0 0 10px hsl(191 100% 50% / 0.3);
+  }
+
+  /* Header Glow */
+  .neon-header-glow {
+    box-shadow: 0 2px 10px hsl(191 100% 50% / 0.2),
+      0 4px 20px hsl(191 100% 50% / 0.1);
+  }
+}
+
+/* ---------------- */
+/* Add these to your existing globals.css */
+
+/* Card styles */
+.card {
+  @apply bg-card border border-border rounded-lg shadow-sm;
+}
+
+.card-header {
+  @apply bg-secondary/20 border-b border-border p-4 font-semibold;
+}
+
+.card-body {
+  @apply p-4;
+}
+
+.card-title {
+  @apply mb-2;
+}
+
+/* Button styles */
+.btn {
+  @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background;
+}
+
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.btn-outline-primary {
+  @apply border border-primary text-primary hover:bg-primary/10;
+}
+
+.btn-sm {
+  @apply h-9 px-3 rounded-md;
+}
+
+/* Form styles */
+.form-text {
+  @apply text-sm;
+}
+
+/* Spinner */
+.spinner-border {
+  @apply animate-spin inline-block border-2 border-current border-t-transparent rounded-full;
+}
+
+.spinner-border-sm {
+  @apply w-4 h-4 border;
+}
+
+/* Suggestions */
+.domain-suggestions {
+  @apply absolute top-full left-0 right-0 bg-background border border-border rounded-md z-50 max-h-48 overflow-y-auto shadow-lg;
+}
+
+.domain-suggestion {
+  @apply p-2 border-b border-border cursor-pointer hover:bg-secondary/20;
+}
+
+/* Results */
+pre {
+  @apply bg-secondary/10 p-4 rounded overflow-auto;
+}
+
+/* === Custom File Input === */
+@layer components {
+  .file-input-custom {
+    @apply w-full p-2 rounded-md border border-input bg-background text-foreground text-sm;
+  }
+
+  .file-input-custom::file-selector-button {
+    @apply bg-primary text-primary-foreground border-none py-1 px-3 rounded-md mr-2 cursor-pointer;
+  }
+
+  /* Untuk browser Webkit (Chrome, Safari) */
+  .file-input-custom::-webkit-file-upload-button {
+    @apply bg-primary text-primary-foreground border-none py-1 px-3 rounded-md mr-2 cursor-pointer;
+  }
+}
+
+/* === Custom File Input === */
+@layer components {
+  .custom-file-input {
+    @apply flex h-11 w-full rounded-md border border-primary bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm;
+  }
+
+  .custom-file-input::file-selector-button {
+    @apply border-none bg-primary text-primary-foreground hover:bg-primary/90 mr-3 px-3 py-5 rounded-md cursor-pointer transition-colors;
+  }
+
+  /* Untuk browser Webkit (Chrome, Safari) */
+  .custom-file-input::-webkit-file-upload-button {
+    @apply border-none bg-primary text-primary-foreground hover:bg-primary/90 mr-3 px-3 py-1 rounded-md cursor-pointer transition-colors;
+  }
+}
+
+/* ==== Custom Scrollbar ==== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+  border-radius: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.5);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 6px hsl(var(--primary) / 0.5),
+    0 0 10px hsl(var(--primary) / 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary));
+  box-shadow: 0 0 10px hsl(var(--primary) / 0.7),
+    0 0 15px hsl(var(--primary) / 0.4);
+}
+
+@supports (scrollbar-color: auto) {
+  /* Firefox support */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary) / 0.5) hsl(var(--background));
+  }
+}
