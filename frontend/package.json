@@ -9,10 +9,26 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/react": "^4.2.5",
+    "@radix-ui/react-slot": "^1.2.0",
+    "@tailwindcss/vite": "^4.1.4",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
     "astro": "^5.4.3",
     "bootstrap": "^5.3.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "datatables.net": "^2.2.2",
     "hooks": "^0.3.2",
-    "papaparse": "^5.5.2"
+    "lucide-react": "^0.503.0",
+    "papaparse": "^5.5.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.2.0",
+    "tailwindcss": "^4.1.4",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "tw-animate-css": "^1.2.8"
   }
 }
