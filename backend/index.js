@@ -99,10 +99,63 @@ app.get("/", (req, res) => {
 //   res.sendFile(path.join(__dirname, "../frontend/scanners.html"))
 // })
 
+function decideTargetType(target) {
+  // Check if the target is a valid IP address
+  const ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+  if (ipRegex.test(target)) {
+    return "ip"
+  } else {
+    return "domain"
+  }
+}
+
+// function checkTargetType(target) {
+//   const {target_type, target, domain} = req.body
+//   if (!["multi", "single"].includes(target_type)) {
+//     return res.status(400).send("Invalid target_type. Use 'multi' or 'single'.")
+//   }
+
+//   const input = target_type === "multi" ? target : domain
+//   if (!input) {
+//     return res.status(400).send("Target is required.")
+//   }
+
+//   if (!Array.isArray(input) && typeof input !== "string") {
+//     return res.status(400).send("Target must be a string or an array.")
+//   }
+
+//   const targetType = decideTargetType(input)
+//   if (targetType === "ip") {
+//     return res.status(400).send("IP address is not allowed.")
+//   }
+//   return targetType
+// }
+
+
 // Scanner routes
-app.post("/subdomain-scan", (req, res) => {
-  const target = req.body.domain
-  runScan("./scripts/subfinder_httpx.sh", target, `./results/${target}_subfinder_result.txt`, res)
+app.post("/subdomain-scan", upload.single("target_list"), (req, res) => {
+  // Expecting the request body to contain a "domain" field
+  // Example: { "domain": "example.com" }
+  // Expecting the request body to contain a "target_type" field
+  // Example: { "target_type": "multi" or "single" }
+  // Expecting the request body to contain a "target" field
+
+  // upload.single("evidence")
+
+  const target_type = req.body.target_type
+  if (target_type === "multi") {
+    const target_list = `uploads/${req.file.filename}`
+    // If target_type is "multi", we expect a list of domains
+    runScan("./scripts/subfinder_httpx_multi.sh", target_list, `./results/${target}_subfinder_result.txt`, res)
+  }
+  else if (target_type === "single") {
+    // If target_type is "single", we expect a single domain
+    const target = req.body.domain
+    runScan("./scripts/subfinder_httpx.sh", target, `./results/${target}_subfinder_result.txt`, res)
+  } else {
+    // Handle invalid target_type
+    return res.status(400).send("Invalid target_type. Use 'multi' or 'single'.")
+  }
 })
 
 app.post("/get-ip-from-domain", (req, res) => {
@@ -123,6 +176,9 @@ app.post("/auto-scan", (req, res) => {
 })
 
 app.post("/nuclei-scan", (req, res) => {
+
+
+
   const target = req.body.domain
   const output = req.body.output
   runScan("./scripts/nuclei_scan_target.sh", target, `./results/${target}_nuclei_result.log`, res)
@@ -157,21 +213,20 @@ app.post("/rce", (req, res) => {
 
 // Form submission route
 app.post("/submit", upload.single("evidence"), (req, res) => {
-  const data = req.body
-  const report = generateReport(data)
-  res.send(`<pre>${report}</pre>` + `<img src="/uploads/${req.file.filename}" />`)
-
-  // Convert the request body to a string
-  const generate_report = JSON.stringify(req.body)
-  const tanggal_waktu = new Date().toISOString().slice(0, 19).replace(/:/g, "_")
-
-  const file = JSON.stringify(req.body)
-
-  // Write the data to a .txt file
-  fs.writeFile(`./uploads/insiden ${data.title}-${tanggal_waktu}.json`, generate_report, (err) => {
-    if (err) throw err
-    console.log("Data written to file")
-  })
+  if (req.file) {
+    // Convert the request body to a string
+    const generate_report = JSON.stringify(req.body)
+    const tanggal_waktu = new Date().toISOString().slice(0, 19).replace(/:/g, "_")
+    const file = JSON.stringify(req.body)
+    // Write the data to a .txt file
+    fs.writeFile(`./uploads/insiden ${req.body.title}-${tanggal_waktu}.json`, generate_report, (err) => {
+      if (err) throw err
+      console.log("Data written to file")
+    })
+    generateReport(req, res)
+  } else {
+    res.send("Please upload a file for evidence.")
+  }
 })
 
 // Base64 image upload route
