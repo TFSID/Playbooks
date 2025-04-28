@@ -4,10 +4,13 @@ export async function createIncident(req, res) {
   const data = req.body
 
   const tags = data.tags
-  if (tags) {
+  console.log("tags received:", tags);
+  try {
     data.tags = Array.isArray(tags) ? tags : [String(tags)];
   }
-  console.log("tags received:", tags);
+    catch (error) {
+        console.log(`tags received: ${error.message}`, tags);
+    }
   try {
     const createIncident = await prisma.Incident.create({
             data: {
