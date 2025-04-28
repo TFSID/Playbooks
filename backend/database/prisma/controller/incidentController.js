@@ -9,7 +9,7 @@ export async function createIncident(req, res) {
     const createIncident = await prisma.Incident.create({
             data: {
                 title: `${data.title}`,
-                tags: tags,
+                tags: ["virus"],
                 severity: `${data.severity}`,
                 attack_type: `${data.attack_type}`,
                 description: `${data.description}`,
@@ -29,7 +29,7 @@ export async function createIncident(req, res) {
         success: true,
         data: {
           title: `${data.title}`,
-          tags: `${data.tags}`,
+          tags: ["virus"],
           severity: `${data.severity}`,
           attack_type: `${data.attack_type}`,
           description: `${data.description}`,
