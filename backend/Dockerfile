@@ -65,6 +65,9 @@ EXPOSE 5000
 # CMD ["/bin/bash"]
 
 RUN npm install
+RUN npm run prisma:generate
+RUN npm run prisma:migrate-dev
+RUN npm run prisma:push
 
 CMD node index.js
 # CMD ["/bin/bash", "/app/run_venv.sh"]
