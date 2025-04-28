@@ -66,7 +66,12 @@ EXPOSE 5000
 
 RUN npm install
 RUN npm run prisma:generate
-RUN npm run prisma:migrate-dev
+# RUN npm run prisma:migrate-dev
+# Create NOW_DATE variable and run migrate-dev with dynamic name
+RUN export NOW_DATE=$(date +%Y%m%d%H%M%S) && \
+    npx prisma migrate dev --name "auto_migration_$NOW_DATE" --schema=./database/schema.prisma
+
+
 RUN npm run prisma:push
 
 CMD node index.js

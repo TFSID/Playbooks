@@ -18,7 +18,8 @@ export async function createIncident(req, res) {
             userId: 1,
           }
     });
-    console.log('Incident created:', `${data}`);
+    // console.log('Incident created:', `${data}`);
+    console.log('Incident created:', createIncident);
     return res.json({
         message: "Report generated successfully",
         success: true,
@@ -36,4 +37,5 @@ export async function createIncident(req, res) {
           imagePath: `${data.domain}/uploads/${req.file.filename}`,
         },
       })
+    
 }
