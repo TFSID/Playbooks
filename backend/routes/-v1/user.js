@@ -1,7 +1,7 @@
 'use strict';
 import express from "express"
 import { validation } from "swagger-generator-express"
-import userController from "../controller/user.js"
+import userController from "../../controller/user.js"
 import requestModel from "./requestModel/user.js"
 
 var router = express.Router();
