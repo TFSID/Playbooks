@@ -15,6 +15,7 @@ export async function createIncident(req, res) {
             query: `${data.query}`,
             uuid: `${data.uuid}`,
             imagePath: `${data.domain}/uploads/${req.file.filename}`,
+            userId: 1,
           }
     });
     console.log('Incident created:', `${data}`);
