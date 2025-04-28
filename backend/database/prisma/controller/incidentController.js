@@ -2,14 +2,14 @@ import { prisma } from '../../../libs/prisma-client.js';
 
 export async function createIncident(req, res) {
   const data = req.body
-
+  console.log(typeof(data.tags))
   const tags = data.tags
   console.log("tags received:", tags);
   try {
     const createIncident = await prisma.Incident.create({
             data: {
                 title: `${data.title}`,
-                tags: ["virus"],
+                tags: [tags],
                 severity: `${data.severity}`,
                 attack_type: `${data.attack_type}`,
                 description: `${data.description}`,
