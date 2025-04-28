@@ -2,16 +2,21 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layouts/app-sidebar";
 import { AppHeader } from "@/components/layouts/app-header";
+import { Toaster } from "@/components/ui/sonner";
 
 const AppLayout = ({ children }) => {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen flex-col w-full">
         <AppHeader />
+
         <div className="flex flex-1">
           <AppSidebar />
           <main className="flex-1 overflow-auto">
-            <div className="px-6 py-4">{children}</div>
+            <div className="px-6 py-4">
+              {children}
+              <Toaster position="top-center" />
+            </div>
           </main>
         </div>
       </div>

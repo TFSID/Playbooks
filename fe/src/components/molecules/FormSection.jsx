@@ -11,6 +11,7 @@ export default function FormSection({
   isLastSection = false,
   children,
   onNext,
+  isSubmitting = false,
 }) {
   useEffect(() => {
     const element = document.getElementById(id);
@@ -20,11 +21,6 @@ export default function FormSection({
   }, [id, isVisible]);
 
   const handleNextSection = () => {
-    const currentSection = document.getElementById(id);
-    if (currentSection) {
-      currentSection.style.display = "none";
-    }
-
     if (onNext) {
       onNext();
     }
@@ -53,8 +49,12 @@ export default function FormSection({
                 Next
               </Button>
             ) : (
-              <Button type="submit" className="neon-glow hover:neon-glow">
-                Submit
+              <Button
+                type="submit"
+                className="neon-glow hover:neon-glow"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Submitting..." : "Submit"}
               </Button>
             )}
           </div>

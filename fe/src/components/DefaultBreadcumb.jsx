@@ -18,7 +18,9 @@ const DefaultBreadcrumb = ({ title }) => {
 
   return (
     <div className="flex items-center gap-5 mb-16">
-      <h1 className="text-2xl font-bold uppercase neon-heading">{title}</h1>
+      <h1 className="text-base lg:text-2xl font-bold uppercase neon-heading">
+        {title}
+      </h1>
 
       <Breadcrumb>
         <BreadcrumbList className="flex items-center space-x-2">
