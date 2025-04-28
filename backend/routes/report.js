@@ -2,6 +2,8 @@ import express from "express";
 import fs from "fs";
 import { generateReport } from "../utils/playbooks.js";
 import { upload } from "../utils/storage.js";
+import { createIncident } from "../database/prisma/controller/incidentController.js";
+import { prisma } from '../libs/prisma-client.js';
 
 const router = express.Router();
 
@@ -25,7 +27,8 @@ router.post("/submit", upload.single("evidence"), (req, res) => {
         console.log("Data written to file");
       }
     );
-    generateReport(req, res);
+    // generateReport(req, res);
+    createIncident(req, res);
   } else {
     res.send("Please upload a file for evidence.");
   }

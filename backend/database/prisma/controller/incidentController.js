@@ -1,0 +1,38 @@
+import { prisma } from '../../../libs/prisma-client.js';
+
+export async function createIncident(req, res) {
+  const data = req.body
+  const createIncident = await prisma.Incident.create({
+        data: {
+            title: `${data.title}`,
+            tags: `${data.tags}`,
+            severity: `${data.severity}`,
+            attack_type: `${data.attack_type}`,
+            description: `${data.description}`,
+            action: `${data.action}`,
+            details: `${data.details}`,
+            recommendations: `${data.recommendations}`,
+            query: `${data.query}`,
+            uuid: `${data.uuid}`,
+            imagePath: `${data.domain}/uploads/${req.file.filename}`,
+          }
+    });
+    console.log('Incident created:', `${data}`);
+    return res.json({
+        message: "Report generated successfully",
+        success: true,
+        data: {
+          title: `${data.title}`,
+          tags: `${data.tags}`,
+          severity: `${data.severity}`,
+          attack_type: `${data.attack_type}`,
+          description: `${data.description}`,
+          action: `${data.action}`,
+          details: `${data.details}`,
+          recommendations: `${data.recommendations}`,
+          query: `${data.query}`,
+          uuid: `${data.uuid}`,
+          imagePath: `${data.domain}/uploads/${req.file.filename}`,
+        },
+      })
+}

@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Change to "postgresql" or "mysql" as needed
+  url      = env("DATABASE_URL")
+}
+
+// Example models
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  incidents Incident[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Incident {
+  id              Int      @id @default(autoincrement())
+  user          User     @relation(fields: [userId], references: [id])
+  userId          Int
+  title           String
+  attack_type     String
+  tags            String[]
+  severity        String
+  action          String
+  details         String
+  description     String
+  recommendations String
+  query           String
+  uuid            String?
+  imagePath      String
+  status          String   @default("open")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
