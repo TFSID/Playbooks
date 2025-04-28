@@ -2,11 +2,16 @@ import { prisma } from '../../../libs/prisma-client.js';
 
 export async function createIncident(req, res) {
   const data = req.body
+
+  const tags = data.tags
+  if (tags) {
+    data.tags = Array.isArray(tags) ? tags : [String(tags)];
+  }
   try {
     const createIncident = await prisma.Incident.create({
             data: {
                 title: `${data.title}`,
-                tags: `${data.tags}`,
+                tags: `${tags}`,
                 severity: `${data.severity}`,
                 attack_type: `${data.attack_type}`,
                 description: `${data.description}`,
